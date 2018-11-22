@@ -12,12 +12,12 @@ import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.SampleProvider;
 
 public class LightPoller extends Thread {
-	private static Port lightPortLeft;
-	private static EV3ColorSensor lightSensorLeft;
-	private static SampleProvider lightSensorValuesLeft;
-	private static float[] lsDataLeft;
+	private Port lightPort;
+	private EV3ColorSensor lightSensor;
+	private SampleProvider lightSensorValues;
+	private float[] lsData;
 	private float firstReading = -1;
-	private float intensityLeft;
+	private float intensity;
 	private float lightThreshold = 20;
 
   /**
@@ -26,10 +26,10 @@ public class LightPoller extends Thread {
    * @param lPort
    */
   public LightPoller(Port lPortLeft) {
-	   lightPortLeft = lPortLeft;
-	   lightSensorLeft = new EV3ColorSensor(lightPortLeft);
-	   lightSensorValuesLeft = lightSensorLeft.getRedMode();
-       lsDataLeft = new float[lightSensorLeft.sampleSize()];
+	   lightPort = lPortLeft;
+	   lightSensor = new EV3ColorSensor(lightPort);
+	   lightSensorValues = lightSensor.getRedMode();
+       lsData = new float[lightSensor.sampleSize()];
   }
 
   /**
@@ -38,14 +38,14 @@ public class LightPoller extends Thread {
    * @return 1 if line found
    * @return -1 if line not found
    */
-  public int detectLineLeft() {
-	  	lightSensorValuesLeft.fetchSample(lsDataLeft, 0);
-		intensityLeft = lsDataLeft[0] * 100;
+  public int detectLine() {
+	  	lightSensorValues.fetchSample(lsData, 0);
+		intensity = lsData[0] * 100;
 		if(firstReading == -1) {
-			firstReading = intensityLeft;
+			firstReading = intensity;
 		}
-		else if ((100 * Math.abs((intensityLeft - firstReading)/firstReading)) > lightThreshold){	
-			if(intensityLeft < firstReading) {
+		else if ((100 * Math.abs((intensity - firstReading)/firstReading)) > lightThreshold){	
+			if(intensity < firstReading) {
 				return 1;
 			}
 		}

@@ -35,7 +35,7 @@ public class BetaDemo {
 	public static Port colourPort = LocalEV3.get().getPort("S4");//high light sensor for rings
 	public static Port lightPortLeft = LocalEV3.get().getPort("S3");//left one when robot is facing away from you
 	
-	public static LightPoller2 lightPollerRight  = new LightPoller2(lightPortRight);
+	public static LightPoller lightPollerRight  = new LightPoller(lightPortRight);
 	public static UltrasonicPoller usPoller = new UltrasonicPoller(usPort);
 	public static LightPoller lightPollerLeft = new LightPoller(lightPortLeft);
 

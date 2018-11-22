@@ -32,7 +32,7 @@ public class Navigation {
 	
 	//correction variables
 	private LightPoller lpLeft;
-	private LightPoller2 lpRight;
+	private LightPoller lpRight;
 	private double position[]  = new double[3];
 	public static final double correction = 5.0;
 	private double tileSize = 30.48;
@@ -46,7 +46,7 @@ public class Navigation {
    * @param WHEEL_RAD
    * @param odometer
    */
-	public Navigation(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor, double TRACK, double WHEEL_RAD, Odometer odometer, LightPoller lpLeft, LightPoller2 lpRight){
+	public Navigation(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor, double TRACK, double WHEEL_RAD, Odometer odometer, LightPoller lpLeft, LightPoller lpRight){
 		this.odometer = odometer;
 	    this.leftMotor = leftMotor;
 	    this.rightMotor = rightMotor;
@@ -469,7 +469,7 @@ public class Navigation {
 		  travelBackward(correction); //5 centimeters can be too much -> will see the perpendicular line which is not what we want
 		  
 		  //travel forward if sees a line => robot will stop moving when it sees a line
-		  while(this.lpRight.detectLineRight() == -1 && this.lpLeft.detectLineLeft() == -1) //MAYBE CHANGE == -1 TO != 1
+		  while(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == -1) //MAYBE CHANGE == -1 TO != 1
 		  {
 			  moveForwardSlowly();
 		  }
@@ -478,13 +478,13 @@ public class Navigation {
 		  Sound.beep();
 		  
 		  //move  one isn't on a line
-		  while(this.lpRight.detectLineRight() != 1 || this.lpLeft.detectLineLeft() != 1)//might have to correct it self twice
+		  while(this.lpRight.detectLine() != 1 || this.lpLeft.detectLine() != 1)//might have to correct it self twice
 		  {
 			  Sound.beep();
-			  if(this.lpRight.detectLineRight() == 1 && this.lpLeft.detectLineLeft() == -1) //right sensor sees a line and left one doesn't
+			  if(this.lpRight.detectLine() == 1 && this.lpLeft.detectLine() == -1) //right sensor sees a line and left one doesn't
 			  {
 				  Sound.beep();
-				  while(this.lpLeft.detectLineLeft() == -1)//move left wheel forward until it sees the line
+				  while(this.lpLeft.detectLine() == -1)//move left wheel forward until it sees the line
 				  {
 					  moveLeftForward();
 				  }
@@ -493,10 +493,10 @@ public class Navigation {
 			  }
 			  
 			  
-			  if(this.lpRight.detectLineRight() == -1 && this.lpLeft.detectLineLeft() == 1) //right sensor doesn't see a line and left does see a line
+			  if(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == 1) //right sensor doesn't see a line and left does see a line
 			  {
 				  Sound.beep();
-				  while(this.lpRight.detectLineRight() == -1)
+				  while(this.lpRight.detectLine() == -1)
 				  {
 					  moveRightForward();
 				  }
@@ -513,7 +513,7 @@ public class Navigation {
 		  travelBackward(correction);
 		  
 		  
-		  while(this.lpRight.detectLineRight() == -1 && this.lpLeft.detectLineLeft() == -1) //MAYBE CHANGE == -1 TO != 1
+		  while(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == -1) //MAYBE CHANGE == -1 TO != 1
 		  {
 			  moveForwardSlowly();
 		  }
@@ -521,13 +521,13 @@ public class Navigation {
 		  stopRobot();
 		  
 		//move  one isn't on a line
-		  while(this.lpRight.detectLineRight() != 1 || this.lpLeft.detectLineLeft() != 1)//might have to correct it self twice
+		  while(this.lpRight.detectLine() != 1 || this.lpLeft.detectLine() != 1)//might have to correct it self twice
 		  {
 			  Sound.beep();
-			  if(this.lpRight.detectLineRight() == 1 && this.lpLeft.detectLineLeft() == -1) //right sensor sees a line and left one doesn't
+			  if(this.lpRight.detectLine() == 1 && this.lpLeft.detectLine() == -1) //right sensor sees a line and left one doesn't
 			  {
 				  Sound.beep();
-				  while(this.lpLeft.detectLineLeft() == -1)//move left wheel forward until it sees the line
+				  while(this.lpLeft.detectLine() == -1)//move left wheel forward until it sees the line
 				  {
 					  moveLeftForward();
 				  }
@@ -536,10 +536,10 @@ public class Navigation {
 			  }
 			  
 			  
-			  if(this.lpRight.detectLineRight() == -1 && this.lpLeft.detectLineLeft() == 1) //right sensor doesn't see a line and left does see a line
+			  if(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == 1) //right sensor doesn't see a line and left does see a line
 			  {
 				  Sound.beep();
-				  while(this.lpRight.detectLineRight() == -1)
+				  while(this.lpRight.detectLine() == -1)
 				  {
 					  moveRightForward();
 				  }
@@ -605,7 +605,7 @@ public class Navigation {
 		  travelBackward(correction); //5 centimeters can be too much -> will see the perpendicular line which is not what we want
 		  
 		  //travel forward if sees a line => robot will stop moving when it sees a line
-		  while(this.lpRight.detectLineRight() == -1 && this.lpLeft.detectLineLeft() == -1) //MAYBE CHANGE == -1 TO != 1
+		  while(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == -1) //MAYBE CHANGE == -1 TO != 1
 		  {
 			  moveForwardSlowly();
 		  }
@@ -615,13 +615,13 @@ public class Navigation {
 		  
 		  //move  one isn't on a line
 		  
-		  while(this.lpRight.detectLineRight() != 1 || this.lpLeft.detectLineLeft() != 1)//might have to correct it self twice
+		  while(this.lpRight.detectLine() != 1 || this.lpLeft.detectLine() != 1)//might have to correct it self twice
 		  {
 			  Sound.beep();
-			  if(this.lpRight.detectLineRight() == 1 && this.lpLeft.detectLineLeft() == -1) //right sensor sees a line and left one doesn't
+			  if(this.lpRight.detectLine() == 1 && this.lpLeft.detectLine() == -1) //right sensor sees a line and left one doesn't
 			  {
 				  Sound.beep();
-				  while(this.lpLeft.detectLineLeft() == -1)//move left wheel forward until it sees the line
+				  while(this.lpLeft.detectLine() == -1)//move left wheel forward until it sees the line
 				  {
 					  moveLeftForward();
 				  }
@@ -630,10 +630,10 @@ public class Navigation {
 			  }
 			  
 			  
-			  if(this.lpRight.detectLineRight() == -1 && this.lpLeft.detectLineLeft() == 1) //right sensor doesn't see a line and left does see a line
+			  if(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == 1) //right sensor doesn't see a line and left does see a line
 			  {
 				  Sound.beep();
-				  while(this.lpRight.detectLineRight() == -1)
+				  while(this.lpRight.detectLine() == -1)
 				  {
 					  moveRightForward();
 				  }
