@@ -31,33 +31,32 @@ public class LightLocalizer {
 		this.lpRight = lpRight;
 	}
 	
-	public void localize()
-	{
-		while(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == -1) 
-		  {
-			  navigation.moveForward();
-		  }
-		navigation.stopRobot();
+	public void localize(){
 		
+		while(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == -1) {
+			  navigation.moveForward();
+		}
+		
+		navigation.stopRobot();
 		//move  one isn't on a line
-		  if(this.lpRight.detectLine() == 1 && this.lpLeft.detectLine() == -1) //right sensor sees a line and left one doesn't
-		  {
-			  Sound.beep();
-			  Sound.beep();
-			  while(this.lpLeft.detectLine() == -1)//move left wheel forward until it sees the line
-			  {
-				  navigation.moveLeftForward();
-			  }
+		if(this.lpRight.detectLine() == 1 && this.lpLeft.detectLine() == -1) //right sensor sees a line and left one doesn't
+		{
+//			Sound.beep();
+//			Sound.beep();
+			while(this.lpLeft.detectLine() == -1)//move left wheel forward until it sees the line
+			{
+				navigation.moveLeftForward();
+			}
 			 
-			  navigation.stopRobot();
+			navigation.stopRobot();
 			  
 			  
-		  }
+		}
 		  
 		  
-		  if(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == 1) //right sensor doesn't see a line and left does see a line
+		if(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == 1) //right sensor doesn't see a line and left does see a line
 		  {
-			  Sound.beep();
+//			  Sound.beep();
 			  while(this.lpRight.detectLine() == -1)
 			  {
 				  navigation.moveRightForward();
@@ -78,8 +77,8 @@ public class LightLocalizer {
 		  
 		  if(this.lpRight.detectLine() == 1 && this.lpLeft.detectLine() == -1) //right sensor sees a line and left one doesn't
 		  {
-			  Sound.beep();
-			  Sound.beep();
+//			  Sound.beep();
+//			  Sound.beep();
 			  while(this.lpLeft.detectLine() == -1)//move left wheel forward until it sees the line
 			  {
 				  navigation.moveLeftForward();
@@ -92,7 +91,7 @@ public class LightLocalizer {
 		  
 		  if(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == 1) //right sensor doesn't see a line and left does see a line
 		  {
-			  Sound.beep();
+//			  Sound.beep();
 			  while(this.lpRight.detectLine() == -1)
 			  {
 				  navigation.moveRightForward();
@@ -112,8 +111,8 @@ public class LightLocalizer {
 		  
 		  if(this.lpRight.detectLine() == 1 && this.lpLeft.detectLine() == -1) //right sensor sees a line and left one doesn't
 		  {
-			  Sound.beep();
-			  Sound.beep();
+//			  Sound.beep();
+//			  Sound.beep();
 			  while(this.lpLeft.detectLine() == -1)//move left wheel forward until it sees the line
 			  {
 				  navigation.moveLeftForward();
@@ -126,7 +125,7 @@ public class LightLocalizer {
 		  
 		  if(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == 1) //right sensor doesn't see a line and left does see a line
 		  {
-			  Sound.beep();
+//			  Sound.beep();
 			  while(this.lpRight.detectLine() == -1)
 			  {
 				  navigation.moveRightForward();

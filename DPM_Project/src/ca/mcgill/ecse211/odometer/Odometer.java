@@ -1,4 +1,3 @@
-
 package ca.mcgill.ecse211.odometer;
 
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
@@ -124,7 +123,7 @@ public class Odometer extends OdometerData implements Runnable {
       double y = (displacement * Math.cos(curr_t)); 
       
       //Update x and y 
-      odo.update(-x, y, 0);
+      odo.update(x, y, 0);
 
       // this ensures that the odometer only runs once every period
       updateEnd = System.currentTimeMillis();

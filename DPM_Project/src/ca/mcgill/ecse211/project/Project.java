@@ -23,8 +23,8 @@ public class Project {
 	public static final double WHEEL_RAD = 2.1;
 	public static final double TRACK = 10.3;
 	
-	public static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
-	public static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
+	public static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
+	public static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
 
 	private static final Port usPort = LocalEV3.get().getPort("S2");
 	public static Port lightPortRight = LocalEV3.get().getPort("S1");//right one when robot is facing away from you
@@ -134,17 +134,18 @@ public class Project {
 		LL_x = 10;	
 		UR_y = 4;
 		LL_y = 0;
-		Tunnel_UR_x = 11;
-		Tunnel_LL_x = 10; 
-		Tunnel_UR_y = 5;
+		Tunnel_UR_x = 5;
+		Tunnel_LL_x = 3; 
+		Tunnel_UR_y = 4;
 		Tunnel_LL_y = 3;
 		Tree_x = 13;
 		Tree_y = 7;
-		Island_UR_x = 6;
-		Island_LL_x = 15;
-		Island_UR_y = 5;
-		Island_LL_y = 9;
+		Island_UR_x = 10;
+		Island_LL_x = 4;
+		Island_UR_y = 10;
+		Island_LL_y = 4;
 		
+		Button.waitForAnyPress();
 		(new Thread() {
 			public void run() {
 				OdometerDisplay odometryDisplay = null;
@@ -159,6 +160,7 @@ public class Project {
 				
 				
 				//Step 2: Localize	
+//				navigation.travelForward(10);
 				usLocalizer.localize();
 				lightLocalizer.localize();
 			
@@ -173,9 +175,9 @@ public class Project {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-					
-				navigation._travelToX(2);
-				navigation._travelToY(2);
+				
+//				navigation.travelTo(2, 2);
+				navigation.moveThroughTunnel(Tunnel_LL_x, Tunnel_LL_y, Tunnel_UR_x, Tunnel_UR_y, Island_LL_x, Island_LL_y, Island_UR_x, Island_UR_y);
 				odometryCorrection.coordinateCorrection();
 				
 

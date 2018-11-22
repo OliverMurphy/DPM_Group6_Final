@@ -72,7 +72,7 @@ public class Navigation {
 		
 		turn(delta_theta); //Turn to delta_theta
 		
-		odoCorrection.angleCorrection();//correct angle -> tunnel travel wont work
+//		odoCorrection.angleCorrection();//correct angle -> tunnel travel wont work
 		
 		try {
 			TimeUnit.MILLISECONDS.sleep(500);
@@ -86,21 +86,8 @@ public class Navigation {
 		delta_x = x - position[0];
 		
 		travelForward(Math.abs(delta_x));
-		
-	    /*while( Math.abs(Math.abs(position[0]) - Math.abs(x)) > 1) //dont need abs value on the X -> coordinates are always positive
-	    	{
-	    	moveForward();
-	    	try {
-				Thread.sleep(10);
-			} 
-	    	catch (InterruptedException e) 
-	    	{
-				e.printStackTrace();
-			}
-	    	position = this.odometer.getXYT();
-	    	
-	    }*/
-	    
+		Sound.beep();
+			    
 	    stopRobot();
 	}
 	public void _travelToY(double y) {
@@ -122,7 +109,7 @@ public class Navigation {
 		
 		turn(delta_theta); //Turn to delta_theta
 		
-		odoCorrection.angleCorrection(); //correct angle -> tunnel travel wont work
+//		odoCorrection.angleCorrection(); //correct angle -> tunnel travel wont work
 	    
 		try {
 			TimeUnit.MILLISECONDS.sleep(500);
@@ -136,19 +123,7 @@ public class Navigation {
 		delta_y = y - position[1];
 		
 		travelForward(Math.abs(delta_y));
-		/*while( Math.abs((Math.abs(position[1]) - Math.abs(y))) > 1) //dont need abs value on the Y -> coordinates are always positive 
-		{
-	    	moveForward();
-	    	try {
-				Thread.sleep(10);
-			} 
-	    	catch (InterruptedException e) 
-	    	{
-	    		e.printStackTrace();
-	    	}
-	    	position = this.odometer.getXYT();
-	    }
-		*/
+
 	    stopRobot();
 	}
 	
