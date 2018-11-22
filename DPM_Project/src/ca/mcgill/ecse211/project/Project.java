@@ -10,10 +10,6 @@ import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.Port;
-import lejos.hardware.sensor.EV3ColorSensor;
-import lejos.hardware.sensor.EV3UltrasonicSensor;
-import lejos.hardware.sensor.SensorModes;
-import lejos.robotics.SampleProvider;
 
 /**
  * This class implements the main control for the project
@@ -22,9 +18,6 @@ import lejos.robotics.SampleProvider;
 
 public class Project {
 	
-	public static LightPoller lightPollerLeft;
-	public static LightPoller lightPollerRight;
-	public static UltrasonicPoller usPoller;
 	public static Navigation navigation;
 	
 	public static final double WHEEL_RAD = 2.1;
@@ -33,22 +26,19 @@ public class Project {
 	public static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
 	public static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 
+	private static final Port usPort = LocalEV3.get().getPort("S2");
+	public static Port lightPortRight = LocalEV3.get().getPort("S1");//right one when robot is facing away from you
+	public static Port colourPort = LocalEV3.get().getPort("S4");//high light sensor for rings
+	public static Port lightPortLeft = LocalEV3.get().getPort("S3");//left one when robot is facing away from you
 	
-	private static final Port usPort = LocalEV3.get().getPort("S1");
-	public static Port lightPort = LocalEV3.get().getPort("S2");
+	public static LightPoller lightPollerRight  = new LightPoller(lightPortRight);
+	public static UltrasonicPoller usPoller = new UltrasonicPoller(usPort);
+	public static LightPoller lightPollerLeft = new LightPoller(lightPortLeft);
 
 	public static final TextLCD lcd = LocalEV3.get().getTextLCD();
 	
 	public static Odometer odometer;
 
-	public static EV3ColorSensor lightSensor = new EV3ColorSensor(lightPort);
-	public static SampleProvider lightSensorValues = lightSensor.getRedMode();
-	static float[] lightSensorData = new float[lightSensor.sampleSize()];
-	
-	public static SensorModes usSensor = new EV3UltrasonicSensor(usPort); 
-	public static SampleProvider usDistance = usSensor.getMode("Distance"); 
-	public static float[] usData = new float[usDistance.sampleSize()];
-	
 	public static UltrasonicLocalizer usLocalizer;
 	public static LightLocalizer lightLocalizer;
 	
