@@ -3,7 +3,7 @@ package ca.mcgill.ecse211.project;
 import java.util.concurrent.TimeUnit;
 
 import ca.mcgill.ecse211.odometer.Odometer;
-
+import ca.mcgill.ecse211.odometer.OdometryCorrection;
 import lejos.hardware.Sound;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
@@ -31,11 +31,10 @@ public class Navigation {
 	public final int defAcceleration = 6000;
 	
 	//correction variables
-	private LightPoller lpLeft;
-	private LightPoller lpRight;
 	private double position[]  = new double[3];
 	public static final double correction = 5.0;
 	private double tileSize = 30.48;
+	private OdometryCorrection odoCorrection;
 	
   /**
    * This is the default constructor of this class. It initiates all motors and variables once
@@ -46,19 +45,17 @@ public class Navigation {
    * @param WHEEL_RAD
    * @param odometer
    */
-	public Navigation(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor, double TRACK, double WHEEL_RAD, Odometer odometer, LightPoller lpLeft, LightPoller lpRight){
+	public Navigation(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor, double TRACK, double WHEEL_RAD, Odometer odometer){
 		this.odometer = odometer;
 	    this.leftMotor = leftMotor;
 	    this.rightMotor = rightMotor;
-	    this.lpLeft = lpLeft;//left one
-	    this.lpRight = lpRight;//right one
-	    
-	    
-
 	    this.TRACK = TRACK;
 	    this.WHEEL_RAD = WHEEL_RAD;
 	  }
 	
+	public void setOdoCorrection(OdometryCorrection o) {
+		this.odoCorrection = o;
+	}
 	public void _travelToX(double x) {
 		double[] position = this.odometer.getXYT(); //get current position
 		x =  x * TILE_SIZE;
@@ -75,7 +72,7 @@ public class Navigation {
 		
 		turn(delta_theta); //Turn to delta_theta
 		
-		angleCorrection();//correct angle -> tunnel travel wont work
+		odoCorrection.angleCorrection();//correct angle -> tunnel travel wont work
 		
 		try {
 			TimeUnit.MILLISECONDS.sleep(500);
@@ -125,7 +122,7 @@ public class Navigation {
 		
 		turn(delta_theta); //Turn to delta_theta
 		
-		angleCorrection(); //correct angle -> tunnel travel wont work
+		odoCorrection.angleCorrection(); //correct angle -> tunnel travel wont work
 	    
 		try {
 			TimeUnit.MILLISECONDS.sleep(500);
@@ -458,214 +455,5 @@ public class Navigation {
 	public void adjustTheta(float a) {
 		odometer.setTheta(a);
 	}
-	
-	/**
-	   * This method corrects the position of the robot on a coordinate. It moves the robot to the of the intersection of the lines. The coordinate values must be integers
-	   */
-
-	  public void coordinateCorrection() {
-		 
-		  //travel backward
-		  travelBackward(correction); //5 centimeters can be too much -> will see the perpendicular line which is not what we want
-		  
-		  //travel forward if sees a line => robot will stop moving when it sees a line
-		  while(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == -1) //MAYBE CHANGE == -1 TO != 1
-		  {
-			  moveForwardSlowly();
-		  }
-		  
-		  stopRobot();//just in case
-		  Sound.beep();
-		  
-		  //move  one isn't on a line
-		  while(this.lpRight.detectLine() != 1 || this.lpLeft.detectLine() != 1)//might have to correct it self twice
-		  {
-			  Sound.beep();
-			  if(this.lpRight.detectLine() == 1 && this.lpLeft.detectLine() == -1) //right sensor sees a line and left one doesn't
-			  {
-				  Sound.beep();
-				  while(this.lpLeft.detectLine() == -1)//move left wheel forward until it sees the line
-				  {
-					  moveLeftForward();
-				  }
-				 
-				  stopRobot();
-			  }
-			  
-			  
-			  if(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == 1) //right sensor doesn't see a line and left does see a line
-			  {
-				  Sound.beep();
-				  while(this.lpRight.detectLine() == -1)
-				  {
-					  moveRightForward();
-				  }
-				  
-				  stopRobot();
-			  }
-		  }
-		  
-		  
-		  //PART TWO
-		  position = this.odometer.getXYT(); //get XYT from odometer
-		  turnTo(position[2] + 90);
-		  
-		  travelBackward(correction);
-		  
-		  
-		  while(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == -1) //MAYBE CHANGE == -1 TO != 1
-		  {
-			  moveForwardSlowly();
-		  }
-		  
-		  stopRobot();
-		  
-		//move  one isn't on a line
-		  while(this.lpRight.detectLine() != 1 || this.lpLeft.detectLine() != 1)//might have to correct it self twice
-		  {
-			  Sound.beep();
-			  if(this.lpRight.detectLine() == 1 && this.lpLeft.detectLine() == -1) //right sensor sees a line and left one doesn't
-			  {
-				  Sound.beep();
-				  while(this.lpLeft.detectLine() == -1)//move left wheel forward until it sees the line
-				  {
-					  moveLeftForward();
-				  }
-				 
-				  stopRobot();
-			  }
-			  
-			  
-			  if(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == 1) //right sensor doesn't see a line and left does see a line
-			  {
-				  Sound.beep();
-				  while(this.lpRight.detectLine() == -1)
-				  {
-					  moveRightForward();
-				  }
-				  
-				  stopRobot();
-			  }
-		  }
-		 
-		  position = this.odometer.getXYT(); 
-		  
-		//set odometer angle
-		  if(325 < position[2] || position[2] < 35)
-		  {
-			  odometer.setTheta(0);
-		  }
-		  
-		  if(55 < position[2] && position[2] < 125)
-		  {
-			  odometer.setTheta(90);
-		  }
-		  
-		  if(145 < position[2] && position[2] < 215)
-		  {
-			  odometer.setTheta(180);
-		  }
-		  
-		  if(235 < position[2] && position[2] < 305)
-		  {
-			  odometer.setTheta(270);
-		  }
-			  
-		  //CORRECT X AND Y ON ODOMETER
-		  
-		  position = this.odometer.getXYT(); 
-		  
-		  double x = position[0];
-		  double y = position[1];
-
-		  
-		  x = x / tileSize;
-		  y = y / tileSize;
-		  
-		  x = Math.rint(x);
-		  y = Math.rint(y);
-		  	  
-		  x = Math.abs(x * tileSize);
-		  y = Math.abs(y * tileSize);
-		  
-		  odometer.setX(x);
-		  odometer.setY(y);
-		  
-	    // do i need to sleep something?
-	  }
-	  
-	  
-	  
-	  /**
-	   * This method corrects angles which are perpendicular to a line.
-	   */
-	  public void angleCorrection()
-	  {
-		  //travel backward
-		  travelBackward(correction); //5 centimeters can be too much -> will see the perpendicular line which is not what we want
-		  
-		  //travel forward if sees a line => robot will stop moving when it sees a line
-		  while(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == -1) //MAYBE CHANGE == -1 TO != 1
-		  {
-			  moveForwardSlowly();
-		  }
-		  
-		  stopRobot();//just in case
-		  Sound.beep();//found a line
-		  
-		  //move  one isn't on a line
-		  
-		  while(this.lpRight.detectLine() != 1 || this.lpLeft.detectLine() != 1)//might have to correct it self twice
-		  {
-			  Sound.beep();
-			  if(this.lpRight.detectLine() == 1 && this.lpLeft.detectLine() == -1) //right sensor sees a line and left one doesn't
-			  {
-				  Sound.beep();
-				  while(this.lpLeft.detectLine() == -1)//move left wheel forward until it sees the line
-				  {
-					  moveLeftForward();
-				  }
-				 
-				  stopRobot();
-			  }
-			  
-			  
-			  if(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == 1) //right sensor doesn't see a line and left does see a line
-			  {
-				  Sound.beep();
-				  while(this.lpRight.detectLine() == -1)
-				  {
-					  moveRightForward();
-				  }
-				  
-				  stopRobot();
-			  }
-		  }
-		  
-		  position = this.odometer.getXYT(); 
-		  
-		//set odometer angle
-		  if(325 < position[2] || position[2] < 35)
-		  {
-			  odometer.setTheta(0);
-		  }
-		  
-		  if(55 < position[2] && position[2] < 125)
-		  {
-			  odometer.setTheta(90);
-		  }
-		  
-		  if(145 < position[2] && position[2] < 215)
-		  {
-			  odometer.setTheta(180);
-		  }
-		  
-		  if(235 < position[2] && position[2] < 305)
-		  {
-			  odometer.setTheta(270);
-		  }
-	  }
-	
-	
 	
 }

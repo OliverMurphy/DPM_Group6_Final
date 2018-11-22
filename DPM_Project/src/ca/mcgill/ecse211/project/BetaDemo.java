@@ -79,13 +79,15 @@ public class BetaDemo {
 		
 		odometer = Odometer.getOdometer(leftMotor, rightMotor, TRACK, WHEEL_RAD);
 
-		navigation = new Navigation(leftMotor, rightMotor, TRACK, WHEEL_RAD, odometer, lightPollerLeft, lightPollerRight);
+		navigation = new Navigation(leftMotor, rightMotor, TRACK, WHEEL_RAD, odometer);
 		
 		usLocalizer = new UltrasonicLocalizer(odometer, usPoller, navigation);
 		
 		lightLocalizer = new LightLocalizer(odometer, lightPollerLeft, lightPollerRight, navigation);
 		
-		//odometryCorrection = new OdometryCorrection(lightPollerLeft, lightPollerRight, navigation, odometer);
+		odometryCorrection = new OdometryCorrection(lightPollerLeft, lightPollerRight, navigation, odometer);
+		
+		navigation.setOdoCorrection(odometryCorrection);
 		
 		
 		// clear the display
@@ -182,7 +184,7 @@ public class BetaDemo {
 				navigation._travelToY(-2);
 				
 				
-				navigation.coordinateCorrection();
+				odometryCorrection.coordinateCorrection();
 				
 				
 				/*
