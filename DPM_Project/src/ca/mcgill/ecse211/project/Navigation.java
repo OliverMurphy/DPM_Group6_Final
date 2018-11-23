@@ -56,6 +56,7 @@ public class Navigation {
 	public void setOdoCorrection(OdometryCorrection o) {
 		this.odoCorrection = o;
 	}
+	
 	public void _travelToX(double x) {
 		double[] position = this.odometer.getXYT(); //get current position
 		x =  x * TILE_SIZE;
@@ -72,7 +73,7 @@ public class Navigation {
 		
 		turn(delta_theta); //Turn to delta_theta
 		
-//		odoCorrection.angleCorrection();//correct angle -> tunnel travel wont work
+		odoCorrection.angleCorrection();//correct angle -> tunnel travel wont work
 		
 		try {
 			TimeUnit.MILLISECONDS.sleep(500);
@@ -86,10 +87,10 @@ public class Navigation {
 		delta_x = x - position[0];
 		
 		travelForward(Math.abs(delta_x));
-		Sound.beep();
 			    
 	    stopRobot();
 	}
+	
 	public void _travelToY(double y) {
 		
 		double[] position = this.odometer.getXYT(); //get current position
@@ -109,7 +110,7 @@ public class Navigation {
 		
 		turn(delta_theta); //Turn to delta_theta
 		
-//		odoCorrection.angleCorrection(); //correct angle -> tunnel travel wont work
+		odoCorrection.angleCorrection(); //correct angle -> tunnel travel wont work
 	    
 		try {
 			TimeUnit.MILLISECONDS.sleep(500);

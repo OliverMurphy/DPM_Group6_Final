@@ -21,7 +21,7 @@ public class Project {
 	public static Navigation navigation;
 	
 	public static final double WHEEL_RAD = 2.1;
-	public static final double TRACK = 10.3;
+	public static final double TRACK = 11.2;//11.2 or was 10.3
 	
 	public static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 	public static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
@@ -88,10 +88,10 @@ public class Project {
 		lcd.drawString("Press any button", 0, 0);
 		lcd.drawString("    to start    ", 0, 1);
 		
-		Button.waitForAnyPress();
+		//Button.waitForAnyPress();
 		
-		WiFiParameters p = new WiFiParameters();
-		p.getParameters();
+//		WiFiParameters p = new WiFiParameters();
+//		p.getParameters();
 		
 //		if(p.redTeam == 6) {
 //			teamColour = "red";
@@ -164,28 +164,32 @@ public class Project {
 				usLocalizer.localize();
 				lightLocalizer.localize();
 			
+				Button.waitForAnyPress();
 				
 				//Set x, y, theta based on corner
 				navigation.initializeXYT(corner);
 				Sound.beep();
 				Sound.beep();
 				Sound.beep();
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+//				try {
+//					Thread.sleep(100);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//				
+				Button.waitForAnyPress();
 				
-//				navigation.travelTo(2, 2);
-				navigation.moveThroughTunnel(Tunnel_LL_x, Tunnel_LL_y, Tunnel_UR_x, Tunnel_UR_y, Island_LL_x, Island_LL_y, Island_UR_x, Island_UR_y);
-				odometryCorrection.coordinateCorrection();
-				
+				navigation._travelToY(2);
+				//navigation.travelTo(2, 2);
+//				navigation.moveThroughTunnel(Tunnel_LL_x, Tunnel_LL_y, Tunnel_UR_x, Tunnel_UR_y, Island_LL_x, Island_LL_y, Island_UR_x, Island_UR_y);
+//				odometryCorrection.coordinateCorrection();
+//				
 
 			}
 		}).start();
 		
-		Button.waitForAnyPress(); 
-		System.exit(0);
+//		Button.waitForAnyPress(); 
+//		System.exit(0);
 		
 		//Localize
 		
