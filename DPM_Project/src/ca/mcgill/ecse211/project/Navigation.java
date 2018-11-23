@@ -129,9 +129,88 @@ public class Navigation {
 	    stopRobot();
 	}
 	
+	public void _travelToNoCorrectionX(double x) {
+		double[] position = this.odometer.getXYT(); //get current position
+		x =  x * TILE_SIZE;
+		double delta_x = x - position[0]; //calculate change in x needed
+		double theta = 270; //calculate angle required
+		
+		if (delta_x < 0) {		//If going to the negative x, change the theta
+			theta = 90;
+		}
+		
+		position = this.odometer.getXYT(); //get current position
+		
+		double delta_theta = position[2] - theta; //calculate change in theta based on current angle
+		
+		turn(delta_theta); //Turn to delta_theta
+		
+//		odoCorrection.angleCorrection();//correct angle -> tunnel travel wont work
+		
+		try {
+			TimeUnit.MILLISECONDS.sleep(500);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		position = this.odometer.getXYT();
+		
+		delta_x = x - position[0];
+		
+		travelForward(Math.abs(delta_x));
+			    
+	    stopRobot();
+	}
+	
+	public void _travelToNoCorrectionY(double y) {
+		
+		double[] position = this.odometer.getXYT(); //get current position
+		y =  y * TILE_SIZE;
+		double delta_y = y - position[1];
+		double theta;
+		if(delta_y < 0) {
+			theta = 180; //calculate angle required
+			Sound.beep();
+			Sound.beep();
+		}
+		else {
+			theta = 0;
+			Sound.beep();
+		}
+		
+		position = this.odometer.getXYT(); //get current position
+		
+		double delta_theta = theta - position[2]; //calculate change in theta based on current angle
+		
+		turn(delta_theta); //Turn to delta_theta
+		
+//		odoCorrection.angleCorrection(); //correct angle -> tunnel travel wont work
+	    
+		try {
+			TimeUnit.MILLISECONDS.sleep(500);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		position = this.odometer.getXYT();
+		
+		delta_y = y - position[1];
+		
+		travelForward(Math.abs(delta_y));
+
+	    stopRobot();
+	}
+	
 	public void travelTo(double x, double y) {
 		_travelToX(x);
 		_travelToY(y);
+		
+	}
+	public void travelToNoCorrection(double x, double y) {
+		_travelToNoCorrectionX(x);
+		_travelToNoCorrectionY(y);
 		
 	}
 	/**
@@ -297,20 +376,20 @@ public class Navigation {
 	public void moveThroughTunnel(int LLX, int LLY, int URX, int URY, int iLLX, int iLLY, int iURX, int iURY) {
 		//Horizontal Backwards
 		if(inIsland(LLX + 0.5, LLY - 0.5, iLLX, iLLY, iURX, iURY)) {
-			travelTo(URX - 0.5, URY + 0.4);
+			travelToNoCorrection(URX - 0.5, URY + 0.4);
 			turnTo(270);
 			travelForward((URX - LLX + 1.5) * TILE_SIZE);
 			odometer.setX((LLX + 1)*TILE_SIZE);
 		}
 		//Vertical Upwards
 		else if(inIsland(URX - 0.5, URY + 0.5, iLLX, iLLY, iURX, iURY)) {
-			travelTo(LLX + 0.6, LLY - 0.5);
+			travelToNoCorrection(LLX + 0.6, LLY - 0.5);
 			travelForward((URY - LLY + 1.5) * TILE_SIZE);
 			odometer.setY((URY + 1)*TILE_SIZE);
 		}
 		//Horizontal Forwards
 		else if(inIsland(URX + 0.5, URY - 0.5, iLLX, iLLY, iURX, iURY)) {
-			travelTo(LLX - 0.5, LLY + 0.4);
+			travelToNoCorrection(LLX - 0.5, LLY + 0.4);
 			turnTo(90);
 			travelForward((URX - LLX + 1.5) * TILE_SIZE);
 			odometer.setX((URX + 1)*TILE_SIZE);
@@ -318,7 +397,7 @@ public class Navigation {
 		}
 		//Vertical Downwards
 		else if(inIsland(LLX - 0.5, LLY + 0.5, iLLX, iLLY, iURX, iURY)) {
-			travelTo(URX + 0.6, URY - 0.5);
+			travelToNoCorrection(URX + 0.6, URY - 0.5);
 			travelForward((URY - LLY + 1.5) * TILE_SIZE);
 			odometer.setY((LLY + 1)*TILE_SIZE);
 		}

@@ -130,21 +130,21 @@ public class Project {
 //		Island_LL_y = p.Island_LL_y;
 		
 		teamColour = "green";
-		corner = 0;	
-		UR_x = 15;
-		LL_x = 10;	
-		UR_y = 4;
-		LL_y = 0;
-		Tunnel_UR_x = 5;
-		Tunnel_LL_x = 3; 
-		Tunnel_UR_y = 4;
+		corner = 0;		
+		UR_x = 8;		
+		LL_x = 2;		
+		UR_y = 3;		
+		LL_y = 0;		
+		Island_UR_x = 6;	
+		Island_LL_x = 0;
+		Island_UR_y = 8;
+		Island_LL_y = 5;
+		Tunnel_UR_x = 3;
+		Tunnel_LL_x = 2;
+		Tunnel_UR_y = 5;
 		Tunnel_LL_y = 3;
-		Tree_x = 13;
-		Tree_y = 7;
-		Island_UR_x = 10;
-		Island_LL_x = 4;
-		Island_UR_y = 10;
-		Island_LL_y = 4;
+		Tree_x = 6;
+		Tree_y = 6;
 		
 		Button.waitForAnyPress();
 		
@@ -182,14 +182,15 @@ public class Project {
 				
 				//navigation.travelTo(2, 2);
 				navigation.moveThroughTunnel(Tunnel_LL_x, Tunnel_LL_y, Tunnel_UR_x, Tunnel_UR_y, Island_LL_x, Island_LL_y, Island_UR_x, Island_UR_y);
+				navigation.travelToTree(Tree_x, Tree_y);
 //				odometryCorrection.coordinateCorrection();
 //				
 
 			}
 		}).start();
 		
-//		Button.waitForAnyPress(); 
-//		System.exit(0);
+		Button.waitForAnyPress(); 
+		System.exit(0);
 		
 		//Localize
 		
