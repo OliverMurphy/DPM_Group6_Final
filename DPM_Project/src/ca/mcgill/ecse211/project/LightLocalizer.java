@@ -2,6 +2,7 @@ package ca.mcgill.ecse211.project;
 
 import java.util.concurrent.TimeUnit;
 
+
 import ca.mcgill.ecse211.odometer.Odometer;
 import lejos.hardware.Sound;
 
@@ -77,7 +78,7 @@ public class LightLocalizer {
 		  
 		  navigation.turn(90); 
 		  
-		  navigation.travelBackward(1);
+		  //navigation.travelBackward(1);
 		  
 		  while(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == -1) 
 		  {

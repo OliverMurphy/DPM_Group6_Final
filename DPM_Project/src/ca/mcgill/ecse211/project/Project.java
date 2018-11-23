@@ -14,6 +14,7 @@ import lejos.hardware.port.Port;
 /**
  * This class implements the main control for the project
  * @author Lucy Coyle
+ * @author Oliver Murphy
  */
 
 public class Project {
@@ -146,6 +147,7 @@ public class Project {
 		Island_LL_y = 4;
 		
 		Button.waitForAnyPress();
+		
 		(new Thread() {
 			public void run() {
 				OdometerDisplay odometryDisplay = null;
@@ -164,7 +166,7 @@ public class Project {
 				usLocalizer.localize();
 				lightLocalizer.localize();
 			
-				Button.waitForAnyPress();
+
 				
 				//Set x, y, theta based on corner
 				navigation.initializeXYT(corner);
@@ -177,11 +179,9 @@ public class Project {
 //					e.printStackTrace();
 //				}
 //				
-				Button.waitForAnyPress();
 				
-				navigation._travelToY(2);
 				//navigation.travelTo(2, 2);
-//				navigation.moveThroughTunnel(Tunnel_LL_x, Tunnel_LL_y, Tunnel_UR_x, Tunnel_UR_y, Island_LL_x, Island_LL_y, Island_UR_x, Island_UR_y);
+				navigation.moveThroughTunnel(Tunnel_LL_x, Tunnel_LL_y, Tunnel_UR_x, Tunnel_UR_y, Island_LL_x, Island_LL_y, Island_UR_x, Island_UR_y);
 //				odometryCorrection.coordinateCorrection();
 //				
 

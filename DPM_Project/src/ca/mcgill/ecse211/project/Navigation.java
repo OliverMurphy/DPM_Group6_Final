@@ -31,9 +31,7 @@ public class Navigation {
 	public final int defAcceleration = 6000;
 	
 	//correction variables
-	private double position[]  = new double[3];
 	public static final double correction = 5.0;
-	private double tileSize = 30.48;
 	private OdometryCorrection odoCorrection;
 	
   /**
@@ -99,14 +97,17 @@ public class Navigation {
 		double theta;
 		if(delta_y < 0) {
 			theta = 180; //calculate angle required
+			Sound.beep();
+			Sound.beep();
 		}
 		else {
 			theta = 0;
+			Sound.beep();
 		}
 		
 		position = this.odometer.getXYT(); //get current position
 		
-		double delta_theta = position[2] - theta; //calculate change in theta based on current angle
+		double delta_theta = theta - position[2]; //calculate change in theta based on current angle
 		
 		turn(delta_theta); //Turn to delta_theta
 		

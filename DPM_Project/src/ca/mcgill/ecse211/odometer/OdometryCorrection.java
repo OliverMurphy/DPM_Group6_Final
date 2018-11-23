@@ -143,10 +143,10 @@ public class OdometryCorrection
 		  
 	  }
 	  
-	  
+	  position = this.odometer.getXYT();
 	  
 	//set odometer angle
-	  if(325 < position[2] || position[2] < 35)
+	  if((325 < position[2] && position[2] < 361)|| (position[2] >= 0 && position[2] < 35))
 	  {
 		  odometer.setTheta(0);
 	  }
@@ -186,7 +186,7 @@ public class OdometryCorrection
 	  odometer.setX(x);
 	  odometer.setY(y);
 	  
-    // do i need to sleep something?
+   
   }
   
   
@@ -249,9 +249,10 @@ public class OdometryCorrection
 		  }
 	  }
 	  
+	  position = this.odometer.getXYT();
 	  
 	//set odometer angle
-	  if(325 < position[2] && position[2] < 35)
+	  if((325 < position[2] && position[2] < 361)|| (position[2] >= 0 && position[2] < 35))
 	  {
 		  odometer.setTheta(0);
 		  Sound.beep();
