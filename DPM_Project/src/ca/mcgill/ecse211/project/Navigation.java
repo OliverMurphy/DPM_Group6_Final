@@ -313,7 +313,6 @@ public class Navigation {
 		//Vertical Upwards
 		else if(inIsland(URX - 0.5, URY + 0.5, iLLX, iLLY, iURX, iURY)) {
 			travelTo(LLX + 0.6, LLY - 1, true);
-			Sound.beep();
 			travelForward((URY - LLY + 2) * TILE_SIZE);
 			odometer.setY((URY + 1)* TILE_SIZE);
 		}
@@ -331,6 +330,7 @@ public class Navigation {
 			travelForward((URY-LLY + 1.5)* TILE_SIZE);
 			odometer.setY((LLY + 0.5)* TILE_SIZE);
 		}
+		sleep(100);
 	}
 	
 	public boolean inIsland(double x, double y, int LLX, int LLY, int URX, int URY) {

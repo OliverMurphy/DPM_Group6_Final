@@ -1,6 +1,7 @@
 package ca.mcgill.ecse211.project;
 
 import ca.mcgill.ecse211.odometer.Odometer;
+import ca.mcgill.ecse211.odometer.OdometerDisplay;
 import ca.mcgill.ecse211.odometer.OdometerExceptions;
 import ca.mcgill.ecse211.odometer.OdometryCorrection;
 import lejos.hardware.Button;
@@ -149,8 +150,16 @@ public class Project {
 		
 		(new Thread() {
 			public void run() {
-				Thread odoThread = new Thread(odometer);
-				odoThread.start();
+//				OdometerDisplay odometryDisplay = null;
+// 				try {
+// 					odometryDisplay = new OdometerDisplay(lcd);
+// 				} catch (OdometerExceptions e1) {}
+ 				
+ 				Thread odoThread = new Thread(odometer);
+ 				odoThread.start();
+// 				Thread odoDisplayThread = new Thread(odometryDisplay);
+// 				odoDisplayThread.start();
+
 
 				//Step 2: Localize	
 				usLocalizer.localize();
@@ -163,7 +172,8 @@ public class Project {
 				Sound.beep();
 				
 				navigation.moveThroughTunnel(Tunnel_LL_x, Tunnel_LL_y, Tunnel_UR_x, Tunnel_UR_y, Island_LL_x, Island_LL_y, Island_UR_x, Island_UR_y);
-				navigation.travelToTree(Tree_x, Tree_y, Island_LL_x, Island_LL_y, Island_UR_x, Island_UR_y);
+				
+				//				navigation.travelToTree(Tree_x, Tree_y);
 
 			}
 		}).start();

@@ -15,8 +15,8 @@ import lejos.hardware.Sound;
 public class OdometryCorrection {
 	private final double TILE_SIZE = 30.48;
 	private static final double CORRECTION = 5.0;
-	private LightPoller lpLeft;
-	private LightPoller lpRight;
+	public LightPoller lpLeft;
+	public LightPoller lpRight;
 	private Navigation nav;
 	private Odometer odometer;
 	private double position[]  = new double[3];
