@@ -109,7 +109,7 @@ public class GetRing {
 	 */
 	
 	public void getOneRing(int x, int y) {
-		navigation.travelToTree(x, y);
+//		navigation.travelToTree(x, y);
 		grabRing();
 		int c = senseRing();
 		switch(c) {

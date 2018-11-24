@@ -306,29 +306,30 @@ public class Navigation {
 		if(inIsland(LLX + 0.5, LLY - 0.5, iLLX, iLLY, iURX, iURY)) {
 			travelTo(URX - 1, URY + 0.5, true);
 			turnTo(270);
-			travelForward(URX-LLX + 1.5);
-			odometer.setY(LLX + 0.5);
+			travelForward((URX-LLX + 1.5)* TILE_SIZE);
+			odometer.setY((LLX + 0.5)* TILE_SIZE);
 			
 		}
 		//Vertical Upwards
 		else if(inIsland(URX - 0.5, URY + 0.5, iLLX, iLLY, iURX, iURY)) {
 			travelTo(LLX + 0.6, LLY - 1, true);
-			travelForward(URY-LLY + 1.5);
-			odometer.setY(URY + 0.5);
+			Sound.beep();
+			travelForward((URY - LLY + 2) * TILE_SIZE);
+			odometer.setY((URY + 1)* TILE_SIZE);
 		}
 		//Horizontal Forwards
 		else if(inIsland(URX + 0.5, URY - 0.5, iLLX, iLLY, iURX, iURY)) {
 			travelTo(LLX - 1, LLY + 0.5, true);
 			turnTo(90);
-			travelForward(URX-LLX + 1.5);
-			odometer.setY(URX + 0.5);
+			travelForward((URX-LLX + 1.5)* TILE_SIZE);
+			odometer.setX((URX + 0.5)* TILE_SIZE);
 			
 		}
 		//Vertical Downwards
 		else if(inIsland(LLX - 0.5, LLY + 0.5, iLLX, iLLY, iURX, iURY)) {
 			travelTo(URX + 0.5, URY + 1, true);
-			travelForward(URY-LLY + 1.5);
-			odometer.setY(LLY + 0.5);
+			travelForward((URY-LLY + 1.5)* TILE_SIZE);
+			odometer.setY((LLY + 0.5)* TILE_SIZE);
 		}
 	}
 	
