@@ -71,7 +71,7 @@ public class Navigation {
 	 * @param x
 	 * @param correct
 	 */
-	public void _travelToX(double x, boolean correct) {
+	private void _travelToX(double x, boolean correct) {
 		double[] position = this.odometer.getXYT(); //get current position
 		x =  x * TILE_SIZE;
 		double delta_x = x - position[0]; //calculate change in x needed
@@ -103,7 +103,7 @@ public class Navigation {
 	 * @param y
 	 * @param correct
 	 */
-	public void _travelToY(double y, boolean correct) {
+	private void _travelToY(double y, boolean correct) {
 		
 		double[] position = this.odometer.getXYT(); //get current position
 		y =  y * TILE_SIZE;
@@ -187,7 +187,7 @@ public class Navigation {
 	 * @param radius radius of the wheel
 	 * @param distance distance for the robot to move
 	 */
-	public int convertDistance(double distance) {
+	private int convertDistance(double distance) {
 	    return (int) ((180.0 * distance) / (Math.PI * WHEEL_RAD));
 	}
 	/**
@@ -196,7 +196,7 @@ public class Navigation {
 	 * @param width width of wheel base
 	 * @param angle angle to move robot to
 	 */
-	public int convertAngle(double angle) {
+	private int convertAngle(double angle) {
 		return convertDistance(Math.PI * TRACK * angle / 360.0);
 	}
 	
@@ -295,11 +295,15 @@ public class Navigation {
 	}
 	
 	/**
-	 * This method moves the robot through a tunnel
-	 * @param LLY
+	 * This method moves the robot through the tunnel
 	 * @param LLX
+	 * @param LLY
 	 * @param URX
 	 * @param URY
+	 * @param iLLX
+	 * @param iLLY
+	 * @param iURX
+	 * @param iURY
 	 */
 	public void moveThroughTunnel(int LLX, int LLY, int URX, int URY, int iLLX, int iLLY, int iURX, int iURY) {
 		//Horizontal Backwards
@@ -315,6 +319,7 @@ public class Navigation {
 			travelTo(LLX + 0.6, LLY - 1, true);
 			travelForward((URY - LLY + 2) * TILE_SIZE);
 			odometer.setY((URY + 1)* TILE_SIZE);
+			odoCorrection.coordinateCorrection();
 		}
 		//Horizontal Forwards
 		else if(inIsland(URX + 0.5, URY - 0.5, iLLX, iLLY, iURX, iURY)) {
@@ -333,13 +338,27 @@ public class Navigation {
 		sleep(100);
 	}
 	
-	public boolean inIsland(double x, double y, int LLX, int LLY, int URX, int URY) {
+	/**
+	 * This method returns true if a position is in the island and false if it is not
+	 * @param x
+	 * @param y
+	 * @param LLX
+	 * @param LLY
+	 * @param URX
+	 * @param URY
+	 * @return
+	 */
+	private boolean inIsland(double x, double y, int LLX, int LLY, int URX, int URY) {
 		if(x < LLX || x > URX || y < LLY || y > URY) {
 			return false;
 		}
 		return true;
 	}
 	
+	/**
+	 * This method initializes XYT in the odometer based on the corner the robot is localized at
+	 * @param c
+	 */
 	public void initializeXYT(int c) {
 		switch(c){
 		case 0:
@@ -358,6 +377,15 @@ public class Navigation {
 		sleep(500);
 	}
 	
+	/**
+	 * This method moves the robot to the tree
+	 * @param x
+	 * @param y
+	 * @param iLLX
+	 * @param iLLY
+	 * @param iURX
+	 * @param iURY
+	 */
 	public void travelToTree(int x, int y, int iLLX, int iLLY, int iURX, int iURY) {
 		double[] position = odometer.getXYT();
 		boolean left = true;
@@ -397,6 +425,11 @@ public class Navigation {
 		
 	}
 	
+	/**
+	 * This method moves the robot to a new side of the tree
+	 * @param x
+	 * @param y
+	 */
 	public void moveSideOfTree(int x, int y) {
 		double[] position = odometer.getXYT();
 		
@@ -414,9 +447,14 @@ public class Navigation {
 		}
 	}
 	
+	/**
+	 * This method sleeps the thread for an amount of miliseconds
+	 * @param s
+	 */
 	private void sleep(int s) {
 		try {
 			Thread.sleep(s);
 		} catch (InterruptedException e) {}
 	}
+	
 }

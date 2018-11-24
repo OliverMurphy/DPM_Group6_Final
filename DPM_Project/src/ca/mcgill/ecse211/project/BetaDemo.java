@@ -85,7 +85,7 @@ public class BetaDemo {
 		
 		lightLocalizer = new LightLocalizer(odometer, lightPollerLeft, lightPollerRight, navigation);
 		
-		odometryCorrection = new OdometryCorrection(lightPollerLeft, lightPollerRight, navigation, odometer);
+		odometryCorrection = new OdometryCorrection(navigation, odometer, lightLocalizer);
 		
 		navigation.setOdoCorrection(odometryCorrection);
 		

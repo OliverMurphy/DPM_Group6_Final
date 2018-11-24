@@ -1,10 +1,7 @@
 package ca.mcgill.ecse211.odometer;
 
-import java.util.concurrent.TimeUnit;
-
-import ca.mcgill.ecse211.project.LightPoller;
+import ca.mcgill.ecse211.project.LightLocalizer;
 import ca.mcgill.ecse211.project.Navigation;
-import lejos.hardware.Sound;
 
 /**
  * This class corrects the odometer value
@@ -15,12 +12,11 @@ import lejos.hardware.Sound;
 public class OdometryCorrection {
 	private final double TILE_SIZE = 30.48;
 	private static final double CORRECTION = 5.0;
-	public LightPoller lpLeft;
-	public LightPoller lpRight;
+	
 	private Navigation nav;
 	private Odometer odometer;
 	private double position[]  = new double[3];
-	
+	private LightLocalizer lightLocalizer;
 	
   /**
    * This is the default constructor of this class.
@@ -30,11 +26,10 @@ public class OdometryCorrection {
    * @param odometer
    * @param lpRight
    */
-  public OdometryCorrection(LightPoller lpLeft, LightPoller lpRight, Navigation nav, Odometer odometer){
-    this.lpRight = lpRight;
+  public OdometryCorrection(Navigation nav, Odometer odometer, LightLocalizer lightLocalizer){
     this.nav = nav;
-    this.lpLeft = lpLeft;
     this.odometer = odometer;
+    this.lightLocalizer = lightLocalizer;
   }
 
 
@@ -103,43 +98,7 @@ public class OdometryCorrection {
   
   private void straightenOnLine() {
 	  nav.travelBackward(CORRECTION);
-	  
-	  
-	  while(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == -1) //MAYBE CHANGE == -1 TO != 1
-	  {
-		  nav.moveForwardSlowly();
-	  }
-	  
-	  nav.stopRobot();
-	  
-	  while(this.lpRight.detectLine() != 1 || this.lpLeft.detectLine() != 1)//might have to correct it self twice
-	  {
-		  Sound.beep();
-		  if(this.lpRight.detectLine() == 1 && this.lpLeft.detectLine() == -1) //right sensor sees a line and left one doesn't
-		  {
-			  Sound.beep();
-			  while(this.lpLeft.detectLine() == -1)//move left wheel forward until it sees the line
-			  {
-				  nav.moveLeftForward();
-			  }
-			 
-			  nav.stopRobot();
-		  }
-		  
-		  
-		  if(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == 1) //right sensor doesn't see a line and left does see a line
-		  {
-			  Sound.beep();
-			  while(this.lpRight.detectLine() == -1){
-				  nav.moveRightForward();
-			  }
-			  
-			  nav.stopRobot();
-		  }
-		  try {
-				TimeUnit.MILLISECONDS.sleep(10);
-			} catch (InterruptedException e1) {}
-	  }
+	  lightLocalizer.straightenOnLine();
   }
   
   /**

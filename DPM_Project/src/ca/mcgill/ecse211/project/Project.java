@@ -1,7 +1,6 @@
 package ca.mcgill.ecse211.project;
 
 import ca.mcgill.ecse211.odometer.Odometer;
-import ca.mcgill.ecse211.odometer.OdometerDisplay;
 import ca.mcgill.ecse211.odometer.OdometerExceptions;
 import ca.mcgill.ecse211.odometer.OdometryCorrection;
 import lejos.hardware.Button;
@@ -77,7 +76,7 @@ public class Project {
 		
 		lightLocalizer = new LightLocalizer(odometer, lightPollerLeft, lightPollerRight, navigation);
 		
-		odometryCorrection = new OdometryCorrection(lightPollerLeft, lightPollerRight, navigation, odometer);
+		odometryCorrection = new OdometryCorrection(navigation, odometer, lightLocalizer);
 		
 		navigation.setOdoCorrection(odometryCorrection);
 		

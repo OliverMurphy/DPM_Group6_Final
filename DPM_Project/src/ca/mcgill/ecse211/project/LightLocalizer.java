@@ -33,33 +33,31 @@ public class LightLocalizer {
 		this.lpRight = lpRight;
 	}
 	
-	public void localize(){
-		
-		while(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == -1) {
+	/**
+	 * This method straightens the robot on the nearest line
+	 */
+	public void straightenOnLine() {
+		while(!this.lpRight.detectLine()&& !this.lpLeft.detectLine()) {
 			  navigation.moveForwardSlowly();
 		}
 		
 		navigation.stopRobot();
 		
-		while(this.lpRight.detectLine() != 1 || this.lpLeft.detectLine() != 1)
-		{
-			if(this.lpRight.detectLine() == 1 && this.lpLeft.detectLine() == -1) //right sensor sees a line and left one doesn't
+		while(!this.lpRight.detectLine()|| !this.lpLeft.detectLine()){
+			if(this.lpRight.detectLine()&& !this.lpLeft.detectLine()) //right sensor sees a line and left one doesn't
 			{
-				while(this.lpLeft.detectLine() == -1)//move left wheel forward until it sees the line
+				while(!this.lpLeft.detectLine())//move left wheel forward until it sees the line
 				{
 					navigation.moveLeftForward();
 				}
 				 
 				navigation.stopRobot();
-				  
-				  
 			}
 			  
 			  
-			if(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == 1) //right sensor doesn't see a line and left does see a line
+			if(!this.lpRight.detectLine() && this.lpLeft.detectLine()) //right sensor doesn't see a line and left does see a line
 			  {
-				  while(this.lpRight.detectLine() == -1)
-				  {
+				  while(!this.lpRight.detectLine()){
 					  navigation.moveRightForward();
 				  }
 				  
@@ -68,115 +66,26 @@ public class LightLocalizer {
 			
 			try {
 				TimeUnit.MILLISECONDS.sleep(10);
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			} catch (InterruptedException e1) {}
 		}
 		
+	}
+	
+	/**
+	 * This method localizes the robot using the light sensors
+	 */
+	public void localize(){
+		straightenOnLine();
+		
+		navigation.turn(90); 
+		
+		straightenOnLine();
 		  
-		  navigation.turn(90); 
+		navigation.turn(-90); //should it be turn?
 		  
-		  //navigation.travelBackward(1);
+		navigation.travelBackward(5);
 		  
-		  while(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == -1) 
-		  {
-			  navigation.moveForwardSlowly();
-		  }
-		  navigation.stopRobot();
-		  
-		  
-		  while(this.lpRight.detectLine() != 1 || this.lpLeft.detectLine() != 1)
-		  {
-			  if(this.lpRight.detectLine() == 1 && this.lpLeft.detectLine() == -1) //right sensor sees a line and left one doesn't
-			  {
-				  while(this.lpLeft.detectLine() == -1)//move left wheel forward until it sees the line
-				  {
-					  navigation.moveLeftForward();
-				  }
-				 
-				  navigation.stopRobot();
-				  
-			  }
-			  
-			  
-			  if(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == 1) //right sensor doesn't see a line and left does see a line
-			  {
-
-				  while(this.lpRight.detectLine() == -1)
-				  {
-					  navigation.moveRightForward();
-				  }
-				  
-				  navigation.stopRobot();
-			  }
-			  
-			  try {
-					TimeUnit.MILLISECONDS.sleep(10);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-		  }
-		  
-		  
-//		  if(this.lpRight.detectLine() == 1 && this.lpLeft.detectLine() == -1) //right sensor sees a line and left one doesn't
-//		  {
-//			  while(this.lpLeft.detectLine() == -1)//move left wheel forward until it sees the line
-//			  {
-//				  navigation.moveLeftForward();
-//			  }
-//			 
-//			  navigation.stopRobot();
-//			  
-//		  }
-//		  
-//		  
-//		  if(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == 1) //right sensor doesn't see a line and left does see a line
-//		  {
-//
-//			  while(this.lpRight.detectLine() == -1)
-//			  {
-//				  navigation.moveRightForward();
-//			  }
-//			  
-//			  navigation.stopRobot();
-//		  }
-		  
-		  navigation.turn(-90); //should it be turn?
-		  
-		  navigation.travelBackward(5);
-		  
-		  while(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == -1) 
-		  {
-			  navigation.moveForwardSlowly();
-		  }
-		  navigation.stopRobot();
-		  
-		  while(this.lpRight.detectLine() != 1 || this.lpLeft.detectLine() != 1)
-		  {
-			  if(this.lpRight.detectLine() == 1 && this.lpLeft.detectLine() == -1) //right sensor sees a line and left one doesn't
-			  {
-				  while(this.lpLeft.detectLine() == -1)//move left wheel forward until it sees the line
-				  {
-					  navigation.moveLeftForward();
-				  }
-				 
-				  navigation.stopRobot();
-				  
-			  }
-			  
-			  
-			  if(this.lpRight.detectLine() == -1 && this.lpLeft.detectLine() == 1) //right sensor doesn't see a line and left does see a line
-			  {
-				  while(this.lpRight.detectLine() == -1)
-				  {
-					  navigation.moveRightForward();
-				  }
-				  
-				  navigation.stopRobot();
-			  }
-		  }
+		straightenOnLine();
 	}
 	
 

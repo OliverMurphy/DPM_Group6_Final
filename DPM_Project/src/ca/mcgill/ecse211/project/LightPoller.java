@@ -33,12 +33,12 @@ public class LightPoller extends Thread {
   }
 
   /**
-   * This method is meant to detect a line by the light sensor and then return 1 if a line is found
+   * This method is meant to detect a line by the light sensor 
    * 
-   * @return 1 if line found
-   * @return -1 if line not found
+   * @return true if line found
+   * @return false if line not found
    */
-  public int detectLine() {
+  public boolean detectLine() {
 	  	lightSensorValues.fetchSample(lsData, 0);
 		intensity = lsData[0] * 100;
 		if(firstReading == -1) {
@@ -46,10 +46,10 @@ public class LightPoller extends Thread {
 		}
 		else if ((100 * Math.abs((intensity - firstReading)/firstReading)) > lightThreshold){	
 			if(intensity < firstReading) {
-				return 1;
+				return true;
 			}
 		}
-		return -1;
+		return false;
   }
 
 }
