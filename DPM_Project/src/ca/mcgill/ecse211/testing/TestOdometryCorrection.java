@@ -7,7 +7,6 @@ import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.Port;
 import ca.mcgill.ecse211.odometer.*;
-import ca.mcgill.ecse211.project.GyroSensorPoller;
 import ca.mcgill.ecse211.project.LightPoller;
 import ca.mcgill.ecse211.project.Navigation;
 import ca.mcgill.ecse211.project.UltrasonicPoller;
@@ -35,19 +34,18 @@ public class TestOdometryCorrection {
      new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
  
   public static final double WHEEL_RAD = 2; //Measured wheel radius
-  public static final double WHEEL_BASE = 11; //Measured distance between wheels
+  public static final double WHEEL_BASE = 11.2; //Measured distance between wheels
   
   //private LightPoller lp;
   //private Navigation nav;
   
   private static final Port usPort = LocalEV3.get().getPort("S2");
-  public static Port lightPort = LocalEV3.get().getPort("S1");
-//	public static Port colourPort = LocalEV3.get().getPort("S3");
-  public static Port gyroPort = LocalEV3.get().getPort("S3");
+  public static Port lightPortL = LocalEV3.get().getPort("S1");
+  public static Port lightPortR = LocalEV3.get().getPort("S3");
 	
-  public static LightPoller lightPoller  = new LightPoller(lightPort);
+  public static LightPoller lightPollerL  = new LightPoller(lightPortL);
+  public static LightPoller lightPollerR = new LightPoller(lightPortR);
   public static UltrasonicPoller usPoller = new UltrasonicPoller(usPort);
-  public static GyroSensorPoller gPoller = new GyroSensorPoller(gyroPort);
   
   public static Odometer odometer;
   public static Navigation navigation; 
@@ -68,7 +66,7 @@ public class TestOdometryCorrection {
    */
    
   public static void drive(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor,
-      double leftRadius, double rightRadius, double track) {
+      double leftRadius, double rightRadius, double track, Navigation navigation) {
     // reset the motors
 	for (EV3LargeRegulatedMotor motor : new EV3LargeRegulatedMotor[] {leftMotor, rightMotor}) {
 	  motor.stop();
@@ -82,21 +80,11 @@ public class TestOdometryCorrection {
 	  // There is nothing to be done here
 	}
 	
-	for (int i = 0; i < 4; i++) {
-	  // drive forward two tiles
-	  leftMotor.setSpeed(FORWARD_SPEED);
-	  rightMotor.setSpeed(FORWARD_SPEED);
+	navigation.travelTo(0,3);
+	navigation.travelTo(3,3);
+	navigation.travelTo(3,0);
+	navigation.travelTo(0,0);
 	
-	  leftMotor.rotate(convertDistance(leftRadius, 3 * TILE_SIZE), true);
-	  rightMotor.rotate(convertDistance(rightRadius, 3 * TILE_SIZE), false);
-	
-	  // turn 90 degrees clockwise
-	  leftMotor.setSpeed(ROTATE_SPEED);
-	  rightMotor.setSpeed(ROTATE_SPEED);
-	
-	  leftMotor.rotate(convertAngle(leftRadius, track, 90.0), true);
-	  rightMotor.rotate(-convertAngle(rightRadius, track, 90.0), false);
-	}
    }
   
 
@@ -157,13 +145,14 @@ public class TestOdometryCorrection {
 		if(buttonChoice == Button.ID_LEFT) {
 			//lcd.drawString("press left", 0, 0);
 	
-			OdometryCorrection odoCorrect = new OdometryCorrection(lightPoller, navigation, gPoller);
+			/*
+			OdometryCorrection odoCorrect = new OdometryCorrection(lightPollerL, lightPollerR, navigation, odometer);
 			Thread odoCorrection = new Thread(odoCorrect);
-			odoCorrection.start();
+			odoCorrection.start();*/
 		
 			(new Thread() {
 		        public void run() {
-		          drive(leftMotor, rightMotor, WHEEL_RAD, WHEEL_RAD, WHEEL_BASE);
+		          drive(leftMotor, rightMotor, WHEEL_RAD, WHEEL_RAD, WHEEL_BASE, navigation);
 		        }
 		      }).start();
 		}

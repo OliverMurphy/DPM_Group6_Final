@@ -3,7 +3,6 @@ package ca.mcgill.ecse211.testing;
 import ca.mcgill.ecse211.odometer.Odometer;
 import ca.mcgill.ecse211.odometer.OdometerDisplay;
 import ca.mcgill.ecse211.odometer.OdometerExceptions;
-import ca.mcgill.ecse211.project.GyroSensorPoller;
 import ca.mcgill.ecse211.project.LightLocalizer;
 import ca.mcgill.ecse211.project.LightPoller;
 import ca.mcgill.ecse211.project.Navigation;
@@ -33,13 +32,12 @@ public class TestLocalizationTiming {
 	public static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
 
 	private static final Port usPort = LocalEV3.get().getPort("S2");
-	public static Port lightPort = LocalEV3.get().getPort("S1");
-//	public static Port colourPort = LocalEV3.get().getPort("S3");
-	public static Port gyroPort = LocalEV3.get().getPort("S3");
+	public static Port lightPortL = LocalEV3.get().getPort("S1");
+	public static Port lightPortR = LocalEV3.get().getPort("S3");
 	
-	public static LightPoller lightPoller  = new LightPoller(lightPort);
+	public static LightPoller lightPollerL  = new LightPoller(lightPortL);
+	public static LightPoller lightPollerR = new LightPoller(lightPortR);
 	public static UltrasonicPoller usPoller = new UltrasonicPoller(usPort);
-	public static GyroSensorPoller gPoller = new GyroSensorPoller(gyroPort);
 
 	public static final TextLCD lcd = LocalEV3.get().getTextLCD();
 	
@@ -80,7 +78,7 @@ public class TestLocalizationTiming {
 		navigation = new Navigation(leftMotor, rightMotor, TRACK, WHEEL_RAD, odometer);
 		
 		usLocalizer = new UltrasonicLocalizer(odometer, usPoller, navigation);
-		lightLocalizer = new LightLocalizer(odometer, lightPoller, navigation);
+		lightLocalizer = new LightLocalizer(odometer, lightPollerL, lightPollerR, navigation);
 		
 		// clear the display
 		lcd.clear();
@@ -128,10 +126,7 @@ public class TestLocalizationTiming {
 				
 				//Step 2: Localize	
 				usLocalizer.localize();
-				try {
-					lightLocalizer.localize();
-				} catch (InterruptedException e) {
-				}
+				lightLocalizer.localize();
 				
 				//Set x, y, theta based on corner
 				navigation.initializeXYT(corner);

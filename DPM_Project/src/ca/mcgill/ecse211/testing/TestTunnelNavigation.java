@@ -4,7 +4,6 @@ import ca.mcgill.ecse211.odometer.Odometer;
 import ca.mcgill.ecse211.odometer.OdometerDisplay;
 import ca.mcgill.ecse211.odometer.OdometerExceptions;
 import ca.mcgill.ecse211.odometer.OdometryCorrection;
-import ca.mcgill.ecse211.project.GyroSensorPoller;
 import ca.mcgill.ecse211.project.LightLocalizer;
 import ca.mcgill.ecse211.project.LightPoller;
 import ca.mcgill.ecse211.project.Navigation;
@@ -24,9 +23,9 @@ import lejos.hardware.port.Port;
 
 public class TestTunnelNavigation {
 	
-	public static LightPoller lightPoller;
+	public static LightPoller lightPollerL;
+	public static LightPoller lightPollerR;
 	public static UltrasonicPoller usPoller;
-	public static GyroSensorPoller gPoller;
 	
 	public static Navigation navigation;
 	
@@ -37,8 +36,8 @@ public class TestTunnelNavigation {
 	public static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
 
 	private static final Port usPort = LocalEV3.get().getPort("S2");
-	public static Port lightPort = LocalEV3.get().getPort("S1");
-	public static Port gyroPort = LocalEV3.get().getPort("S3");
+	public static Port lightPortL = LocalEV3.get().getPort("S1");
+	public static Port lightPortR = LocalEV3.get().getPort("S3");
 
 	public static final TextLCD lcd = LocalEV3.get().getTextLCD();
 	
@@ -77,13 +76,13 @@ public class TestTunnelNavigation {
 		odometer = Odometer.getOdometer(leftMotor, rightMotor, TRACK, WHEEL_RAD);
 
 		navigation = new Navigation(leftMotor, rightMotor, TRACK, WHEEL_RAD, odometer);
-		gPoller = new GyroSensorPoller(gyroPort);
 		
-		lightPoller = new LightPoller(lightPort);
+		lightPollerL = new LightPoller(lightPortL);
+		lightPollerR = new LightPoller(lightPortR);
 		usPoller = new UltrasonicPoller(usPort);
 		
 		usLocalizer = new UltrasonicLocalizer(odometer, usPoller, navigation);
-		lightLocalizer = new LightLocalizer(odometer, lightPoller, navigation);
+		lightLocalizer = new LightLocalizer(odometer, lightPollerL, lightPollerR, navigation);
 		
 		// clear the display
 		lcd.clear();
@@ -109,10 +108,7 @@ public class TestTunnelNavigation {
 					
 					//Step 2: Localize	
 					usLocalizer.localize();
-					try {
-						lightLocalizer.localize();
-					} catch (InterruptedException e) {
-					}
+					lightLocalizer.localize();
 					
 					//Set x, y, theta based on corner
 					navigation.initializeXYT(corner);
@@ -125,13 +121,8 @@ public class TestTunnelNavigation {
 					Sound.beep();
 					Sound.beep();
 					navigation.turnTo(0);
-					gPoller.resetGyro();
 					
 					
-					OdometryCorrection odoCorrect = new OdometryCorrection(lightPoller, navigation, gPoller);
-					Thread odoCorrection = new Thread(odoCorrect);
-					odoCorrection.start();
-
 					lcd.clear();
 					navigation.moveThroughTunnel(Tunnel_LL_x, Tunnel_LL_y, Tunnel_UR_x, Tunnel_UR_y, Island_LL_x, Island_LL_y, Island_UR_x, Island_UR_y);
 					

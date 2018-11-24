@@ -22,7 +22,8 @@ import lejos.hardware.port.Port;
 
 public class TestLocalization {
 	
-	public static LightPoller lightPoller;
+	public static LightPoller lightPollerL;
+	public static LightPoller lightPollerR;
 	public static UltrasonicPoller usPoller;
 	public static Navigation navigation;
 	
@@ -34,7 +35,8 @@ public class TestLocalization {
 
 	
 	private static final Port usPort = LocalEV3.get().getPort("S2");
-	public static Port lightPort = LocalEV3.get().getPort("S1");
+	public static Port lightPort1 = LocalEV3.get().getPort("S1");
+	public static Port lightPort2 = LocalEV3.get().getPort("S3");
 
 	public static final TextLCD lcd = LocalEV3.get().getTextLCD();
 	
@@ -83,13 +85,10 @@ public class TestLocalization {
 			if(buttonChoice == Button.ID_LEFT) {
 				(new Thread() {
 					public void run() {
-						lightPoller = new LightPoller(lightPort);
-						lightLocalizer = new LightLocalizer(odometer, lightPoller, navigation);
-						try {
-							lightLocalizer.localize();
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+						lightPollerL = new LightPoller(lightPort1);
+						lightPollerR = new LightPoller(lightPort2);
+						lightLocalizer = new LightLocalizer(odometer, lightPollerL, lightPollerR, navigation);
+						lightLocalizer.localize();
 					}
 				}).start();
 			}
@@ -107,18 +106,15 @@ public class TestLocalization {
 		else {	
 			(new Thread() {
 				public void run() {
-					lightPoller = new LightPoller(lightPort);
+					lightPollerL = new LightPoller(lightPort1);
+					lightPollerR = new LightPoller(lightPort2);
 					usPoller = new UltrasonicPoller(usPort);
 					
 					usLocalizer = new UltrasonicLocalizer(odometer, usPoller, navigation);
-					lightLocalizer = new LightLocalizer(odometer, lightPoller, navigation);
+					lightLocalizer = new LightLocalizer(odometer, lightPollerL, lightPollerR, navigation);
 					
 					usLocalizer.localize();
-					try {
-						lightLocalizer.localize();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+					lightLocalizer.localize();
 				}
 			}).start();
 		}
