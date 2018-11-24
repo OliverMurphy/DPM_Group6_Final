@@ -22,7 +22,7 @@ public class TestColourDetection {
 	public static Navigation navigation;
 	
 	public static final double WHEEL_RAD = 2.1;
-	public static final double TRACK = 10.3;
+	public static final double TRACK = 11.2;
 	
 	public static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 	public static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));

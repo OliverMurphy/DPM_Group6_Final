@@ -5,6 +5,7 @@ import ca.mcgill.ecse211.odometer.OdometerDisplay;
 import ca.mcgill.ecse211.odometer.OdometerExceptions;
 import ca.mcgill.ecse211.project.LightLocalizer;
 
+
 /**
  * This class tests localization
  * @author Lucy Coyle
@@ -19,6 +20,7 @@ import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.Port;
+import lejos.hardware.Sound;
 
 public class TestLocalization {
 	
@@ -28,7 +30,7 @@ public class TestLocalization {
 	public static Navigation navigation;
 	
 	public static final double WHEEL_RAD = 2.1;
-	public static final double TRACK = 10.3;
+	public static final double TRACK = 11.2;
 	
 	public static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 	public static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
@@ -106,6 +108,7 @@ public class TestLocalization {
 		else {	
 			(new Thread() {
 				public void run() {
+					Sound.beep();
 					lightPollerL = new LightPoller(lightPort1);
 					lightPollerR = new LightPoller(lightPort2);
 					usPoller = new UltrasonicPoller(usPort);
@@ -114,6 +117,7 @@ public class TestLocalization {
 					lightLocalizer = new LightLocalizer(odometer, lightPollerL, lightPollerR, navigation);
 					
 					usLocalizer.localize();
+					Sound.beep();
 					lightLocalizer.localize();
 				}
 			}).start();

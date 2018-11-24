@@ -30,7 +30,7 @@ public class TestWheelBase {
      new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
  
   public static final double WHEEL_RAD = 2; //Measured wheel radius
-  public static final double WHEEL_BASE = 11; //Measured distance between wheels
+  public static final double WHEEL_BASE = 11.2; //Measured distance between wheels
   
 
   /**
