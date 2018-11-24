@@ -178,10 +178,10 @@ public class BetaDemo {
 //				Thread odoCorrection = new Thread(odoCorrect);
 //				odoCorrection.start();
 				
-				navigation._travelToX(2);
+//				navigation._travelToX(2);
 				
 				
-				navigation._travelToY(-2);
+//				navigation._travelToY(-2);
 				
 				
 				odometryCorrection.coordinateCorrection();

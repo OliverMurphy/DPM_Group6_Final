@@ -134,7 +134,7 @@ public class Project {
 		LL_x = 2;		
 		UR_y = 3;		
 		LL_y = 0;		
-		Island_UR_x = 6;	
+		Island_UR_x = 8;	
 		Island_LL_x = 0;
 		Island_UR_y = 8;
 		Island_LL_y = 5;
@@ -142,8 +142,8 @@ public class Project {
 		Tunnel_LL_x = 2;
 		Tunnel_UR_y = 5;
 		Tunnel_LL_y = 3;
-		Tree_x = 6;
-		Tree_y = 6;
+		Tree_x = 7;
+		Tree_y = 7;
 		
 		Button.waitForAnyPress();
 		
@@ -163,7 +163,7 @@ public class Project {
 				Sound.beep();
 				
 				navigation.moveThroughTunnel(Tunnel_LL_x, Tunnel_LL_y, Tunnel_UR_x, Tunnel_UR_y, Island_LL_x, Island_LL_y, Island_UR_x, Island_UR_y);
-//				navigation.travelToTree(Tree_x, Tree_y);
+				navigation.travelToTree(Tree_x, Tree_y, Island_LL_x, Island_LL_y, Island_UR_x, Island_UR_y);
 
 			}
 		}).start();
