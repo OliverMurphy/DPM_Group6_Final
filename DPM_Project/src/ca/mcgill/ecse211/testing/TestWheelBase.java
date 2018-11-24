@@ -8,7 +8,7 @@ import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
 /**
- * This class is used to drive the robot on the demo floor.
+ * This class is used to test the wheel base and wheel radius values
  *  @author Nima Chatlani
  */
  
@@ -42,6 +42,7 @@ public class TestWheelBase {
    * @param leftRadius
    * @param rightRadius
    * @param width
+   * @param track 
    */
    
   public static void drive(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor,
@@ -105,7 +106,7 @@ public class TestWheelBase {
   
   /**
 	 * This main method implements the logic for the wheel base test
-	 * @throws OdometerExceptions 
+	 * 
 	 */
   public static void main(String[] args){
 

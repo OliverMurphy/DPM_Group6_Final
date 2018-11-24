@@ -16,6 +16,11 @@ import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.SampleProvider;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
+/**
+ * This class implements a test of the odometer 
+ * @author Nima Chatlani
+ */
+
 
 public class TestOdometry {
 	public static final double WHEEL_RAD = 2.1;

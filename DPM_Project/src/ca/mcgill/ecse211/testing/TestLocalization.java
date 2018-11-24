@@ -22,6 +22,11 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.Port;
 import lejos.hardware.Sound;
 
+/**
+ * This class implements a test of the localization
+ * @author Lucy Coyle
+ */
+
 public class TestLocalization {
 	
 	public static LightPoller lightPollerL;

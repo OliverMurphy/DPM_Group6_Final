@@ -14,11 +14,11 @@ import ca.mcgill.ecse211.project.UltrasonicPoller;
 /**
  * This class is used to test the odometry correction feature
  *  @author Nima Chatlani
- */
+ *
+ **/
  
  
 public class TestOdometryCorrection {
-	
 	
   private static final int FORWARD_SPEED = 250;
   private static final int ROTATE_SPEED = 150;
@@ -51,9 +51,6 @@ public class TestOdometryCorrection {
   public static Navigation navigation; 
 
 
-
-  
-
   /**
    * This method is meant to drive the robot in a square of size 2x2 Tiles. It is to run in parallel
    * with the odometer and Odometer correcton classes allow testing their functionality.
@@ -67,6 +64,7 @@ public class TestOdometryCorrection {
    
   public static void drive(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor,
       double leftRadius, double rightRadius, double track, Navigation navigation) {
+	  boolean correct = true;
     // reset the motors
 	for (EV3LargeRegulatedMotor motor : new EV3LargeRegulatedMotor[] {leftMotor, rightMotor}) {
 	  motor.stop();
@@ -80,10 +78,10 @@ public class TestOdometryCorrection {
 	  // There is nothing to be done here
 	}
 	
-	navigation.travelTo(0,3);
-	navigation.travelTo(3,3);
-	navigation.travelTo(3,0);
-	navigation.travelTo(0,0);
+	navigation.travelTo(0,3,true);
+	navigation.travelTo(3,3,true);
+	navigation.travelTo(3,0,true);
+	navigation.travelTo(0,0,true);
 	
    }
   
@@ -94,7 +92,7 @@ public class TestOdometryCorrection {
    * 
    * @param radius
    * @param distance
-   * @return
+   * @return distance
    */
   private static int convertDistance(double radius, double distance) {
     return (int) ((180.0 * distance) / (Math.PI * radius));
@@ -107,7 +105,6 @@ public class TestOdometryCorrection {
    * @param radius
    * @param distance
    * @param angle
-   * @return
    */
 
   private static int convertAngle(double radius, double width, double angle) {
@@ -115,7 +112,7 @@ public class TestOdometryCorrection {
   }
   
   /**
-	 * This main method implements the logic for the wheel base test
+	 * This main method implements the logic for the odometer correction test 
 	 * @throws OdometerExceptions 
 	 */
   public static void main(String[] args)throws OdometerExceptions{
@@ -123,6 +120,8 @@ public class TestOdometryCorrection {
 	  	odometer = Odometer.getOdometer(leftMotor, rightMotor, WHEEL_BASE, WHEEL_RAD);
 		navigation = new Navigation(leftMotor, rightMotor, WHEEL_BASE, WHEEL_RAD, odometer);
 		OdometerDisplay odometryDisplay = new OdometerDisplay(lcd);
+		OdometryCorrection odoCorrect = new OdometryCorrection(lightPollerL, lightPollerR, navigation, odometer);
+		navigation.setOdoCorrection(odoCorrect);
 	  
 		// clear the display
 		lcd.clear();
@@ -144,11 +143,6 @@ public class TestOdometryCorrection {
 		
 		if(buttonChoice == Button.ID_LEFT) {
 			//lcd.drawString("press left", 0, 0);
-	
-			/*
-			OdometryCorrection odoCorrect = new OdometryCorrection(lightPollerL, lightPollerR, navigation, odometer);
-			Thread odoCorrection = new Thread(odoCorrect);
-			odoCorrection.start();*/
 		
 			(new Thread() {
 		        public void run() {
