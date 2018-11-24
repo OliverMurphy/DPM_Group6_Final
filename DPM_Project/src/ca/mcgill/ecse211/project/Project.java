@@ -150,15 +150,15 @@ public class Project {
 		
 		(new Thread() {
 			public void run() {
-				OdometerDisplay odometryDisplay = null;
-				try {
-					odometryDisplay = new OdometerDisplay(lcd);
-				} catch (OdometerExceptions e1) {}
-				
+//				OdometerDisplay odometryDisplay = null;
+//				try {
+//					odometryDisplay = new OdometerDisplay(lcd);
+//				} catch (OdometerExceptions e1) {}
+//				
 				Thread odoThread = new Thread(odometer);
 				odoThread.start();
-				Thread odoDisplayThread = new Thread(odometryDisplay);
-				odoDisplayThread.start();
+//				Thread odoDisplayThread = new Thread(odometryDisplay);
+//				odoDisplayThread.start();
 				
 				
 				//Step 2: Localize	

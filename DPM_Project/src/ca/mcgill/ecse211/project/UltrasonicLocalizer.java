@@ -1,7 +1,6 @@
 package ca.mcgill.ecse211.project;
 
 import ca.mcgill.ecse211.odometer.Odometer;
-import lejos.hardware.Sound;
 
 
 /**

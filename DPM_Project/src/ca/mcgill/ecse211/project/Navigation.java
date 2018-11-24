@@ -277,10 +277,20 @@ public class Navigation {
 	public void travelForward(double distance) {
 		leftMotor.setAcceleration(acceleration);
 		rightMotor.setAcceleration(acceleration);
-		
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		leftMotor.setSpeed(FORWARD_SPEED);
 		rightMotor.setSpeed(FORWARD_SPEED);
-
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		leftMotor.rotate(convertDistance(distance), true);
 		rightMotor.rotate(convertDistance(distance), false);
 		
@@ -335,7 +345,6 @@ public class Navigation {
 	public void moveLeftForward()
 	{
 		leftMotor.setSpeed(CORRECTION_SPEED);
-		rightMotor.setSpeed(CORRECTION_SPEED);
 		leftMotor.forward();
 	}
 	
@@ -344,7 +353,6 @@ public class Navigation {
 	 */
 	public void moveRightForward()
 	{
-		leftMotor.setSpeed(CORRECTION_SPEED);
 		rightMotor.setSpeed(CORRECTION_SPEED);
 		rightMotor.forward();
 	}
@@ -376,30 +384,24 @@ public class Navigation {
 	public void moveThroughTunnel(int LLX, int LLY, int URX, int URY, int iLLX, int iLLY, int iURX, int iURY) {
 		//Horizontal Backwards
 		if(inIsland(LLX + 0.5, LLY - 0.5, iLLX, iLLY, iURX, iURY)) {
-			travelToNoCorrection(URX - 0.5, URY + 0.4);
+			travelTo(URX - 1, URY + 0.5);
 			turnTo(270);
-			travelForward((URX - LLX + 1.5) * TILE_SIZE);
-			odometer.setX((LLX + 1)*TILE_SIZE);
+			_travelToNoCorrectionX(LLX+1);
 		}
 		//Vertical Upwards
 		else if(inIsland(URX - 0.5, URY + 0.5, iLLX, iLLY, iURX, iURY)) {
-			travelToNoCorrection(LLX + 0.6, LLY - 0.5);
-			travelForward((URY - LLY + 1.5) * TILE_SIZE);
-			odometer.setY((URY + 1)*TILE_SIZE);
+			travelTo(LLX + 0.6, URY + 1);
 		}
 		//Horizontal Forwards
 		else if(inIsland(URX + 0.5, URY - 0.5, iLLX, iLLY, iURX, iURY)) {
-			travelToNoCorrection(LLX - 0.5, LLY + 0.4);
+			travelTo(LLX - 1, LLY + 0.5);
 			turnTo(90);
-			travelForward((URX - LLX + 1.5) * TILE_SIZE);
-			odometer.setX((URX + 1)*TILE_SIZE);
+			_travelToNoCorrectionX(URX + 1);
 			
 		}
 		//Vertical Downwards
 		else if(inIsland(LLX - 0.5, LLY + 0.5, iLLX, iLLY, iURX, iURY)) {
-			travelToNoCorrection(URX + 0.6, URY - 0.5);
-			travelForward((URY - LLY + 1.5) * TILE_SIZE);
-			odometer.setY((LLY + 1)*TILE_SIZE);
+			travelTo(URX + 0.5, LLY + 1);
 		}
 	}
 	

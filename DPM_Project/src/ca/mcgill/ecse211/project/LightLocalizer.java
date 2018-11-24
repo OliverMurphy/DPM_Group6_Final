@@ -4,7 +4,6 @@ import java.util.concurrent.TimeUnit;
 
 
 import ca.mcgill.ecse211.odometer.Odometer;
-import lejos.hardware.Sound;
 
 /**
  * This class localizes the robot by light detection
