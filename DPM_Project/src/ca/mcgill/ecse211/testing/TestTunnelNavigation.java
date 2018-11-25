@@ -36,8 +36,8 @@ public class TestTunnelNavigation {
 	public static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
 
 	private static final Port usPort = LocalEV3.get().getPort("S2");
-	public static Port lightPortL = LocalEV3.get().getPort("S1");
-	public static Port lightPortR = LocalEV3.get().getPort("S3");
+	public static Port lightPortL = LocalEV3.get().getPort("S3");
+	public static Port lightPortR = LocalEV3.get().getPort("S1");
 
 	public static final TextLCD lcd = LocalEV3.get().getTextLCD();
 	
@@ -60,8 +60,8 @@ public class TestTunnelNavigation {
 	public static int Island_LL_x = 0;
 	public static int Island_UR_y = 8;
 	public static int Island_LL_y = 5;
-	public static int Tunnel_UR_x = 3;
-	public static int Tunnel_LL_x = 2;
+	public static int Tunnel_UR_x = 4;
+	public static int Tunnel_LL_x = 3;
 	public static int Tunnel_UR_y = 5;
 	public static int Tunnel_LL_y = 3;
 	
@@ -74,8 +74,8 @@ public class TestTunnelNavigation {
 	public static void main(String[] args) throws OdometerExceptions, InterruptedException {
 		
 		odometer = Odometer.getOdometer(leftMotor, rightMotor, TRACK, WHEEL_RAD);
-
 		navigation = new Navigation(leftMotor, rightMotor, TRACK, WHEEL_RAD, odometer);
+		
 		
 		lightPollerL = new LightPoller(lightPortL);
 		lightPollerR = new LightPoller(lightPortR);
@@ -83,6 +83,9 @@ public class TestTunnelNavigation {
 		
 		usLocalizer = new UltrasonicLocalizer(odometer, usPoller, navigation);
 		lightLocalizer = new LightLocalizer(odometer, lightPollerL, lightPollerR, navigation);
+		
+		OdometryCorrection odoCorrect = new OdometryCorrection(lightPollerL, lightPollerR, navigation, odometer);
+		navigation.setOdoCorrection(odoCorrect);
 		
 		// clear the display
 		lcd.clear();
@@ -95,16 +98,17 @@ public class TestTunnelNavigation {
 
 		(new Thread() {
 				public void run() {
+					/*
 					OdometerDisplay odometryDisplay = null;
 					try {
 						odometryDisplay = new OdometerDisplay(lcd);
 					} catch (OdometerExceptions e1) {
 						e1.printStackTrace();
-					}
+					}*/
 					Thread odoThread = new Thread(odometer);
 					odoThread.start();
-					Thread odoDisplayThread = new Thread(odometryDisplay);
-					odoDisplayThread.start();
+					//Thread odoDisplayThread = new Thread(odometryDisplay);
+					//odoDisplayThread.start();
 					
 					//Step 2: Localize	
 					usLocalizer.localize();

@@ -19,6 +19,11 @@ import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.hardware.sensor.SensorModes;
 import lejos.robotics.SampleProvider;
 
+/**
+ * This class implements a test of the tunnel navigation
+ * @author Lucy Coyle
+ */
+
 public class TestSensor {
 	
 	//Set up us sensor
