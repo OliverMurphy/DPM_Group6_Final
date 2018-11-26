@@ -68,6 +68,16 @@ public class TestLocalizationTiming {
 	
 	/**
 	 * This main method implements the logic for the beta demo
+	 * 
+	 * 1. create instances of the Odometer, Navigation, UltrasonicLocalizer, and LightLocalizer 
+	 * 2. wait for a button to be pressed
+	 * 3. create instance of the WiFiParameters
+	 * 4. call getParameters() on the WiFiParameter instance 
+	 * 5. set variables to equal the values passed in from the WiFiParameters 
+	 * 6. start the odometry display thread
+	 * 7. call localize() on the UltrasonicLocalizer and LightLocalizer
+	 * 8. Set x, y, theta based on corner
+	 * 
 	 * @throws OdometerExceptions 
 	 * @throws InterruptedException 
 	 */
@@ -78,7 +88,7 @@ public class TestLocalizationTiming {
 		navigation = new Navigation(leftMotor, rightMotor, TRACK, WHEEL_RAD, odometer);
 		
 		usLocalizer = new UltrasonicLocalizer(odometer, usPoller, navigation);
-		lightLocalizer = new LightLocalizer(odometer, lightPollerL, lightPollerR, navigation);
+		lightLocalizer = new LightLocalizer(lightPollerL, lightPollerR, navigation);
 		
 		// clear the display
 		lcd.clear();

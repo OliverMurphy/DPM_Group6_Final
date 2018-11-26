@@ -40,6 +40,11 @@ public class TestColourDetection {
 
 	/**
 	 * This main method implements the logic for the localization test
+	 * 
+	 * 1. create a new instance of the GetRing class
+	 * 2. call grabRing()
+	 * 3. print the color detected depending on what is read 
+	 * 
 	 * @throws OdometerExceptions
 	 * @throws InterruptedException
 	 */

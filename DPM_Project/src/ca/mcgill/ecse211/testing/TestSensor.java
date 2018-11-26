@@ -20,7 +20,7 @@ import lejos.hardware.sensor.SensorModes;
 import lejos.robotics.SampleProvider;
 
 /**
- * This class implements a test of the tunnel navigation
+ * This class implements a test of the light, color, and ultrasonic sensors
  * @author Lucy Coyle
  */
 
@@ -89,6 +89,9 @@ public class TestSensor {
 	
 	/**
 	 * This main method implements the logic for the light sensor colour test
+	 * 1. create a new instance of GetRing
+	 * 2. call colourClassify on getRing 
+	 * 3. print the color read by the light sensor to the lcd display
 	 */
 	
 	public static void lightSensorColourTest() {
@@ -124,6 +127,9 @@ public class TestSensor {
 	
 	/**
 	 * This main method implements the logic for the light sensor line detection test
+	 * 1. create a new instance of LightPoller
+	 * 2. call detectLine() on getRing 
+	 * 3. if a line is detected, beep
 	 */
 	public static void lightSensorLineTest() {
 		
@@ -132,7 +138,7 @@ public class TestSensor {
 			public void run() {
 				try {
 					while(true){
-						if(TestSensor.lightPoller.detectLine() == 1) {
+						if(TestSensor.lightPoller.detectLine() == true) {
 							Sound.beep();
 						};
 						Thread.sleep(50);
@@ -147,6 +153,10 @@ public class TestSensor {
 	
 	/**
 	 * This main method implements the logic for the ultrasonic sensor test
+	 * 
+	 * 1. create a new instance of UltrasonicPoller 
+	 * 2. print the result of getDistance to the lcd display which is the 
+	 * 	  distance read by the ultrasonic sensor
 	 */
 	public static void ultrasonicSensorTest() {
 		ultrasonicPoller = new UltrasonicPoller(usPort);

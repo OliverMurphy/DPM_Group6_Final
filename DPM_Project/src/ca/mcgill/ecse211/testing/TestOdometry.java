@@ -43,6 +43,13 @@ public class TestOdometry {
 
 	/**
 	 * This main method implements the logic for the odometry test
+	 * 
+	 * 1. create an instance of the Odometer and Odometer display
+	 * 2. print options for either float motors or square driver on the lcd display
+	 * 3. if float motors is selected, the odometry and odometry display threads are started
+	 *    and any changes in x,y,theta positions are displayed on the lcd screen to demonstrate 
+	 *    odometry capabilities 
+	 * 4. if square driver is selected, drive() is called
 	 * @throws OdometerExceptions 
 	 */
 	public static void main(String [] args) throws OdometerExceptions{

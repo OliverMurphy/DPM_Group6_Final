@@ -107,6 +107,11 @@ public class TestWheelBase {
   /**
 	 * This main method implements the logic for the wheel base test
 	 * 
+	 * 1. wait for a button to be pressed, which starts a new thread
+	 * 2. drive is called which drives the robot in a square 
+	 * 3. if the robot drives in a perfect square, this indicated an accurate wheel
+	 * 	  radius and wheel base
+	 * 
 	 */
   public static void main(String[] args){
 

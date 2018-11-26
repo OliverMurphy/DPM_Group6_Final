@@ -39,7 +39,13 @@ public class TestGetRing {
 	static float[] colourSensorData = new float[3];
 
 	/**
-	 * This main method implements the logic for the localization test
+	 * This main method implements the logic for the get ring test
+	 * 
+	 * 1. create a new instance of the Odometer and Navigation classes
+	 * 2. wait for a button to be pressed which starts the odometer thread
+	 * 3. create a new instance of the GetRing class
+	 * 4. call grabRing() to test the capabilities of that method
+	 * 
 	 * @throws OdometerExceptions
 	 * @throws InterruptedException
 	 */

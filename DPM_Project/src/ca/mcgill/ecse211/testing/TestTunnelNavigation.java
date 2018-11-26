@@ -67,7 +67,14 @@ public class TestTunnelNavigation {
 	
 
 	/**
-	 * This main method implements the logic for the tunnel navigation test
+	 * This main method implements the logic for the tunnel navigation test 
+	 * 
+	 * 1. create new instances of Odometer, Navigation, LightPollers, UltrasonicPoller, UltrasonicLocalizer,
+	 *    LightLocalizer, and OdometryCorrection
+	 * 2. wait for a button to be pressed which starts the odometry thread
+	 * 3. call localize() on the UltrasonicLicalizer and LightLocalizer
+	 * 4. Set x, y, theta based on corner
+	 * 5. call moveThroughTunnel on the Navigation instance variable with parameters defined above
 	 * @throws OdometerExceptions 
 	 * @throws InterruptedException 
 	 */
@@ -82,9 +89,9 @@ public class TestTunnelNavigation {
 		usPoller = new UltrasonicPoller(usPort);
 		
 		usLocalizer = new UltrasonicLocalizer(odometer, usPoller, navigation);
-		lightLocalizer = new LightLocalizer(odometer, lightPollerL, lightPollerR, navigation);
+		lightLocalizer = new LightLocalizer(lightPollerL, lightPollerR, navigation);
 		
-		OdometryCorrection odoCorrect = new OdometryCorrection(lightPollerL, lightPollerR, navigation, odometer);
+		OdometryCorrection odoCorrect = new OdometryCorrection(navigation, odometer, lightLocalizer);
 		navigation.setOdoCorrection(odoCorrect);
 		
 		// clear the display

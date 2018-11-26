@@ -54,6 +54,17 @@ public class TestLocalization {
 
 	/**
 	 * This main method implements the logic for the localization test
+	 * 
+	 * 1. create a new Odometer, Navigation, and Odometry Display instance 
+	 * 2. print the options for either a partial test or a full test to the lcd display
+	 * 3. wait for a button to be pressed, which starts the odometer thread
+	 * 4. if the partial test is selected, print the options for either a light localization or an ultrasonic localization
+	 * 5. if the light localization is selected, create 2 new left and right LightPollers and new LightLocalizer instance
+	 * 6. call localize() on the LightLocalizer
+	 * 7. if the ultrasonic localization is selected, create a new instance of the UltrasonicPoller and UltrasonicLocalizer
+	 * 8. call localize() on the UltrasonicLocalizer 
+	 * 9. if the full localization is selected, then localize() is called on both instances of the UltrasonicLocalizer and
+	 *    the LightLocalizer to observe the results of the localize() method
 	 * @throws OdometerExceptions
 	 * @throws InterruptedException
 	 */
@@ -94,7 +105,7 @@ public class TestLocalization {
 					public void run() {
 						lightPollerL = new LightPoller(lightPort1);
 						lightPollerR = new LightPoller(lightPort2);
-						lightLocalizer = new LightLocalizer(odometer, lightPollerL, lightPollerR, navigation);
+						lightLocalizer = new LightLocalizer(lightPollerL, lightPollerR, navigation);
 						lightLocalizer.localize();
 					}
 				}).start();
@@ -119,7 +130,7 @@ public class TestLocalization {
 					usPoller = new UltrasonicPoller(usPort);
 					
 					usLocalizer = new UltrasonicLocalizer(odometer, usPoller, navigation);
-					lightLocalizer = new LightLocalizer(odometer, lightPollerL, lightPollerR, navigation);
+					lightLocalizer = new LightLocalizer(lightPollerL, lightPollerR, navigation);
 					
 					usLocalizer.localize();
 					Sound.beep();

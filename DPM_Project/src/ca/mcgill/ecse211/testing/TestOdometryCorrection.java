@@ -10,6 +10,7 @@ import ca.mcgill.ecse211.odometer.*;
 import ca.mcgill.ecse211.project.LightPoller;
 import ca.mcgill.ecse211.project.Navigation;
 import ca.mcgill.ecse211.project.UltrasonicPoller;
+import ca.mcgill.ecse211.project.LightLocalizer;
 
 /**
  * This class is used to test the odometry correction feature
@@ -36,8 +37,6 @@ public class TestOdometryCorrection {
   public static final double WHEEL_RAD = 2; //Measured wheel radius
   public static final double WHEEL_BASE = 11.2; //Measured distance between wheels
   
-  //private LightPoller lp;
-  //private Navigation nav;
   
   private static final Port usPort = LocalEV3.get().getPort("S2");
   public static Port lightPortL = LocalEV3.get().getPort("S1");
@@ -49,11 +48,16 @@ public class TestOdometryCorrection {
   
   public static Odometer odometer;
   public static Navigation navigation; 
+  
+  public static LightLocalizer lightLocalizer = new LightLocalizer(lightPollerL, lightPollerR, navigation);
+
 
 
   /**
-   * This method is meant to drive the robot in a square of size 2x2 Tiles. It is to run in parallel
+   * This method is meant to drive the robot in a square of size 1x1 Tiles. It is to run in parallel
    * with the odometer and Odometer correcton classes allow testing their functionality.
+   * 
+   * 1. call travelTo on the Navigation instance with correction enabled
    * 
    * @param leftMotor
    * @param rightMotor
@@ -113,6 +117,11 @@ public class TestOdometryCorrection {
   
   /**
 	 * This main method implements the logic for the odometer correction test 
+	 * 
+	 * 1. create new instances of Odometer, Navigation, OdometryDisplay, and Odometry Correction
+	 * 2. wait for a button to be pressed, which starts the odometry thread
+	 * 3. call drive which implements a square driver with the odometry correction 
+	 * 
 	 * @throws OdometerExceptions 
 	 */
   public static void main(String[] args)throws OdometerExceptions{
@@ -120,7 +129,7 @@ public class TestOdometryCorrection {
 	  	odometer = Odometer.getOdometer(leftMotor, rightMotor, WHEEL_BASE, WHEEL_RAD);
 		navigation = new Navigation(leftMotor, rightMotor, WHEEL_BASE, WHEEL_RAD, odometer);
 		OdometerDisplay odometryDisplay = new OdometerDisplay(lcd);
-		OdometryCorrection odoCorrect = new OdometryCorrection(lightPollerL, lightPollerR, navigation, odometer);
+		OdometryCorrection odoCorrect = new OdometryCorrection(navigation, odometer, lightLocalizer);
 		navigation.setOdoCorrection(odoCorrect);
 	  
 		// clear the display
