@@ -265,6 +265,7 @@ public class Navigation {
 	public void moveLeftForward()
 	{
 		leftMotor.setSpeed(CORRECTION_SPEED);
+		sleep(10);
 		leftMotor.forward();
 	}
 	
@@ -274,6 +275,7 @@ public class Navigation {
 	public void moveRightForward()
 	{
 		rightMotor.setSpeed(CORRECTION_SPEED);
+		sleep(10);
 		rightMotor.forward();
 	}
 	
@@ -311,15 +313,17 @@ public class Navigation {
 			travelTo(URX - 1, URY + 0.5, true);
 			turnTo(270);
 			travelForward((URX-LLX + 1.5)* TILE_SIZE);
-			odometer.setY((LLX + 0.5)* TILE_SIZE);
-			
+			odometer.setX((LLX + 0.5)* TILE_SIZE);
+			odometer.setTheta(180);
 		}
 		//Vertical Upwards
 		else if(inIsland(URX - 0.5, URY + 0.5, iLLX, iLLY, iURX, iURY)) {
 			travelTo(LLX + 0.6, LLY - 1, true);
 			travelForward((URY - LLY + 2) * TILE_SIZE);
-			odometer.setY((URY + 1)* TILE_SIZE);
 			odoCorrection.coordinateCorrection();
+			odometer.setY((URY + 1)* TILE_SIZE);
+			odometer.setTheta(90);
+			
 		}
 		//Horizontal Forwards
 		else if(inIsland(URX + 0.5, URY - 0.5, iLLX, iLLY, iURX, iURY)) {
@@ -327,6 +331,7 @@ public class Navigation {
 			turnTo(90);
 			travelForward((URX-LLX + 1.5)* TILE_SIZE);
 			odometer.setX((URX + 0.5)* TILE_SIZE);
+			odometer.setTheta(0);
 			
 		}
 		//Vertical Downwards
@@ -334,6 +339,7 @@ public class Navigation {
 			travelTo(URX + 0.5, URY + 1, true);
 			travelForward((URY-LLY + 1.5)* TILE_SIZE);
 			odometer.setY((LLY + 0.5)* TILE_SIZE);
+			odometer.setTheta(90);
 		}
 		sleep(100);
 	}
@@ -395,16 +401,20 @@ public class Navigation {
 		
 		
 		//Check edge cases
-		if(x + 1 == 8 || x + 1 == iURX) {
+//		if(x + 1 == 8 || x + 1 == iURX) {
+		if(x + 1 == 8) {
 			right = false;
 		}
-		if(x - 1 == 0 || x - 1 == iLLX) {
+//		if(x - 1 == 0 || x - 1 == iLLX) {
+		if(x - 1 == 0) {
 			left = false;
 		}
-		if(y + 1 == 8 || y + 1 == iURY) {
+//		if(y + 1 == 8 || y + 1 == iURY) {
+		if(y + 1 == 8) {
 			down = false;
 		}
-		if(y - 1 == 0 || y - 1 == iLLY) {
+//		if(y - 1 == 0 || y - 1 == iLLY) {
+		if(y - 1 == 0) {
 			up = false;
 		}
 		

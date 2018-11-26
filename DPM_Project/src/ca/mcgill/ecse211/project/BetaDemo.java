@@ -83,7 +83,7 @@ public class BetaDemo {
 		
 		usLocalizer = new UltrasonicLocalizer(odometer, usPoller, navigation);
 		
-		lightLocalizer = new LightLocalizer(odometer, lightPollerLeft, lightPollerRight, navigation);
+		lightLocalizer = new LightLocalizer(lightPollerLeft, lightPollerRight, navigation);
 		
 		odometryCorrection = new OdometryCorrection(navigation, odometer, lightLocalizer);
 		

@@ -2,9 +2,6 @@ package ca.mcgill.ecse211.project;
 
 import java.util.concurrent.TimeUnit;
 
-
-import ca.mcgill.ecse211.odometer.Odometer;
-
 /**
  * This class localizes the robot by light detection
  * @author Lucy Coyle
@@ -14,7 +11,6 @@ import ca.mcgill.ecse211.odometer.Odometer;
 
 public class LightLocalizer {
 
-	Odometer odometer;
 	private LightPoller lpLeft;
 	private LightPoller lpRight;
 	private Navigation navigation;
@@ -26,8 +22,7 @@ public class LightLocalizer {
 	   * @param usPoller
 	   * @param navigation
 	   */
-	public LightLocalizer(Odometer odometer, LightPoller lpLeft, LightPoller lpRight, Navigation navigation)  {
-		this.odometer = odometer;
+	public LightLocalizer(LightPoller lpLeft, LightPoller lpRight, Navigation navigation)  {
 		this.lpLeft = lpLeft;
 		this.navigation = navigation;
 		this.lpRight = lpRight;
@@ -46,9 +41,14 @@ public class LightLocalizer {
 		while(!this.lpRight.detectLine()|| !this.lpLeft.detectLine()){
 			if(this.lpRight.detectLine()&& !this.lpLeft.detectLine()) //right sensor sees a line and left one doesn't
 			{
+				navigation.moveLeftForward();
 				while(!this.lpLeft.detectLine())//move left wheel forward until it sees the line
 				{
-					navigation.moveLeftForward();
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
 				 
 				navigation.stopRobot();
@@ -57,8 +57,13 @@ public class LightLocalizer {
 			  
 			if(!this.lpRight.detectLine() && this.lpLeft.detectLine()) //right sensor doesn't see a line and left does see a line
 			  {
-				  while(!this.lpRight.detectLine()){
-					  navigation.moveRightForward();
+				navigation.moveRightForward();
+				  while(!this.lpRight.detectLine()){try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					  
 				  }
 				  
 				  navigation.stopRobot();

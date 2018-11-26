@@ -10,21 +10,20 @@ import ca.mcgill.ecse211.project.Navigation;
  */
 
 public class OdometryCorrection {
-	private final double TILE_SIZE = 30.48;
-	private static final double CORRECTION = 5.0;
+	
+	private static final double CORRECTION_BACKWARDS = 5.0;
+	private static final int ANGLE_RANGE = 35;
 	
 	private Navigation nav;
 	private Odometer odometer;
-	private double position[]  = new double[3];
 	private LightLocalizer lightLocalizer;
 	
   /**
    * This is the default constructor of this class.
    * 
-   * @param lpLeft
    * @param nav
    * @param odometer
-   * @param lpRight
+   * @param lightLocalizer
    */
   public OdometryCorrection(Navigation nav, Odometer odometer, LightLocalizer lightLocalizer){
     this.nav = nav;
@@ -41,26 +40,24 @@ public class OdometryCorrection {
   public void coordinateCorrection() {
 	  straightenOnLine();
 	   
-	  position = this.odometer.getXYT(); //get XYT from odometer
+	  double [] position = this.odometer.getXYT(); 
 	  nav.turnTo(position[2] + 90);
 	  
 	  angleCorrection();
-		  
-	  //CORRECT X AND Y ON ODOMETER
-	  
+
 	  position = this.odometer.getXYT(); 
 	  
 	  double x = position[0];
 	  double y = position[1];
 	  
-	  x = x / TILE_SIZE;
-	  y = y / TILE_SIZE;
+	  x = x / nav.TILE_SIZE;
+	  y = y / nav.TILE_SIZE;
 	  
 	  x = Math.rint(x);
 	  y = Math.rint(y);
 	  	  
-	  x = Math.abs(x * TILE_SIZE);
-	  y = Math.abs(y * TILE_SIZE);
+	  x = Math.abs(x * nav.TILE_SIZE);
+	  y = Math.abs(y * nav.TILE_SIZE);
 	  
 	  odometer.setX(x);
 	  odometer.setY(y);
@@ -73,21 +70,21 @@ public class OdometryCorrection {
    */
   
   private void correctTheta() {
-	  position = this.odometer.getXYT();
-	  //set odometer angle
-	  if((325 < position[2] && position[2] < 361)|| (position[2] >= 0 && position[2] < 35)){
+	  double [] position = this.odometer.getXYT();
+	 
+	  if((360 - ANGLE_RANGE < position[2] && position[2] <= 360)|| (0 <= position[2] && position[2] < 0 + ANGLE_RANGE)){
 		  odometer.setTheta(0);
 	  }
 	  
-	  if(55 < position[2] && position[2] < 125){
+	  if(90 - ANGLE_RANGE < position[2] && position[2] < 90 + ANGLE_RANGE){
 		  odometer.setTheta(90);
 	  }
 	  
-	  if(145 < position[2] && position[2] < 215){
+	  if(180 - ANGLE_RANGE < position[2] && position[2] < 180 + ANGLE_RANGE){
 		  odometer.setTheta(180);
 	  }
 	  
-	  if(235 < position[2] && position[2] < 305){
+	  if(270 - ANGLE_RANGE < position[2] && position[2] < 270 + ANGLE_RANGE){
 		  odometer.setTheta(270);
 	  }
   }
@@ -97,7 +94,7 @@ public class OdometryCorrection {
    */
   
   private void straightenOnLine() {
-	  nav.travelBackward(CORRECTION);
+	  nav.travelBackward(CORRECTION_BACKWARDS);
 	  lightLocalizer.straightenOnLine();
   }
   
