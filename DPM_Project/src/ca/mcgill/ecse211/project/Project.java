@@ -13,67 +13,77 @@ import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.SampleProvider;
 
 /**
- * This class implements the main control for the project
+ * This class implements the main control for the project. It consists of one main method that is run for the demo.
+ * It is where all the ports and variables for the demo run are set.
+ * 
+ * In the main method, first the navigation, odometer, odemetry correction and localizer objects are created. Then
+ * the program waits for a button press, after which the game parameters are received from the server. Then, the main
+ * thread begins. This thread can be stopped at any time by a button press. The second thread, the odometer is started.
+ * Now the robot localizes and the x, y and theta values in the odometer are set based on the starting corner. The 
+ * robot then beeps three times to indicate that localization is over. Then the robot moves through the tunnel, once 
+ * out of the tunnel, it travels to the tree and tries to pick up one ring. Once the ring is gathered, the robot moves
+ * back through the tunnel, returns to the starting corner and beeps 5 times signaling the end of the demo.
+ * 
  * @author Lucy Coyle
  * @author Oliver Murphy
  */
 
 public class Project {
 	
-	public static Navigation navigation;
+	private static Navigation navigation;
 	
-	public static final double WHEEL_RAD = 2.1;
-	public static final double TRACK = 11.2;//11.2 or was 10.3
+	private static final double WHEEL_RAD = 2.1;
+	private static final double TRACK = 11.2;
+	private static final int TEAM_NUM = 6;
 	
-	public static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
-	public static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
+	private static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
+	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
 
 	private static final Port usPort = LocalEV3.get().getPort("S2");
-	public static Port lightPortRight = LocalEV3.get().getPort("S1");
-	public static Port colourPort = LocalEV3.get().getPort("S4");
-	public static Port lightPortLeft = LocalEV3.get().getPort("S3");
+	private static Port lightPortRight = LocalEV3.get().getPort("S1");
+	private static Port colourPort = LocalEV3.get().getPort("S4");
+	private static Port lightPortLeft = LocalEV3.get().getPort("S3");
 	
-	public static LightPoller lightPollerRight  = new LightPoller(lightPortRight);
-	public static UltrasonicPoller usPoller = new UltrasonicPoller(usPort);
-	public static LightPoller lightPollerLeft = new LightPoller(lightPortLeft);
+	private static LightPoller lightPollerRight  = new LightPoller(lightPortRight);
+	private static UltrasonicPoller usPoller = new UltrasonicPoller(usPort);
+	private static LightPoller lightPollerLeft = new LightPoller(lightPortLeft);
 	
-	public static EV3ColorSensor colourSensor = new EV3ColorSensor(colourPort);
-	public static SampleProvider colourSensorValues = colourSensor.getRGBMode();
-	static float[] colourSensorData = new float[3];
+	private static EV3ColorSensor colourSensor = new EV3ColorSensor(colourPort);
+	private static SampleProvider colourSensorValues = colourSensor.getRGBMode();
+	private static float[] colourSensorData = new float[3];
 
-	public static final TextLCD lcd = LocalEV3.get().getTextLCD();
+	private static final TextLCD lcd = LocalEV3.get().getTextLCD();
 	
-	public static Odometer odometer;
+	private static Odometer odometer;
 
-	public static UltrasonicLocalizer usLocalizer;
-	public static LightLocalizer lightLocalizer;
+	private static UltrasonicLocalizer usLocalizer;
+	private static LightLocalizer lightLocalizer;
 	
-	public static String teamColour;
-	public static int corner;		
-	public static int UR_x;		
-	public static int LL_x;		
-	public static int UR_y;		
-	public static int LL_y;		
-	public static int Island_UR_x;	
-	public static int Island_LL_x;
-	public static int Island_UR_y;
-	public static int Island_LL_y;
-	public static int Tunnel_UR_x;
-	public static int Tunnel_LL_x;
-	public static int Tunnel_UR_y;
-	public static int Tunnel_LL_y;
-	public static int Tree_x;
-	public static int Tree_y;
+	private static int corner;		
+	private static int UR_x;		
+	private static int LL_x;		
+	private static int UR_y;		
+	private static int LL_y;		
+	private static int Island_UR_x;	
+	private static int Island_LL_x;
+	private static int Island_UR_y;
+	private static int Island_LL_y;
+	private static int Tunnel_UR_x;
+	private static int Tunnel_LL_x;
+	private static int Tunnel_UR_y;
+	private static int Tunnel_LL_y;
+	private static int Tree_x;
+	private static int Tree_y;
 	
-	public static OdometryCorrection odometryCorrection;
+	private static OdometryCorrection odometryCorrection;
 	
 	/**
-	 * This main method implements the logic for the project
+	 * This main method implements the logic for the project demo
 	 * @throws OdometerExceptions 
 	 * @throws InterruptedException 
 	 */
 	public static void main(String[] args) throws OdometerExceptions, InterruptedException {
-		//Step 1: Receive parameters from game controller
+		
 		odometer = Odometer.getOdometer(leftMotor, rightMotor, TRACK, WHEEL_RAD);
 
 		navigation = new Navigation(leftMotor, rightMotor, TRACK, WHEEL_RAD, odometer);
@@ -85,73 +95,50 @@ public class Project {
 		odometryCorrection = new OdometryCorrection(navigation, odometer, lightLocalizer);
 		
 		navigation.setOdoCorrection(odometryCorrection);
-		
-		
-		// clear the display
+	
 		lcd.clear();
 
-		// Press button to start
 		lcd.drawString("Press any button", 0, 0);
 		lcd.drawString("    to start    ", 0, 1);
 		
-		//Button.waitForAnyPress();
-		
-//		WiFiParameters p = new WiFiParameters();
-//		p.getParameters();
-		
-//		if(p.redTeam == 6) {
-//			teamColour = "red";
-//			corner = p.redCorner;		
-//			UR_x = p.Red_UR_x;		
-//			LL_x = p.Red_LL_x;		
-//			UR_y = p.Red_UR_y;		
-//			LL_y = p.Red_LL_y;		
-//			Tunnel_UR_x = p.TNR_UR_x;
-//			Tunnel_LL_x = p.TNR_LL_x;
-//			Tunnel_UR_y = p.TNR_UR_y;
-//			Tunnel_LL_y = p.TNR_LL_y;
-//			Tree_x = p.TR_x;
-//			Tree_y = p.TR_y;
-//			
-//		}
-//		else {
-//			teamColour = "green";
-//			corner = p.greenCorner;		
-//			UR_x = p.Green_UR_x;		
-//			LL_x = p.Green_LL_x;		
-//			UR_y = p.Green_UR_y;		
-//			LL_y = p.Green_LL_y;	
-//			Tunnel_UR_x = p.TNG_UR_x;
-//			Tunnel_LL_x = p.TNG_LL_x;
-//			Tunnel_UR_y = p.TNG_UR_y;
-//			Tunnel_LL_y = p.TNG_LL_y;
-//			Tree_x = p.TG_x;
-//			Tree_y = p.TG_y;
-//		}
-//		
-//		Island_UR_x = p.Island_UR_x;	
-//		Island_LL_x = p.Island_LL_x;
-//		Island_UR_y = p.Island_UR_y;
-//		Island_LL_y = p.Island_LL_y;
-		
-		teamColour = "green";
-		corner = 0;		
-		UR_x = 8;		
-		LL_x = 0;		
-		UR_y = 3;		
-		LL_y = 0;		
-		Island_UR_x = 6;	
-		Island_LL_x = 0;
-		Island_UR_y = 8;
-		Island_LL_y = 5;
-		Tunnel_UR_x = 3;
-		Tunnel_LL_x = 2;
-		Tunnel_UR_y = 5;
-		Tunnel_LL_y = 3;
-		Tree_x = 5;
-		Tree_y = 7;
-		
 		Button.waitForAnyPress();
+		
+		//Step 1: Get WiFi Parameters
+		WiFiParameters p = new WiFiParameters();
+		p.getParameters();
+		
+		if(p.redTeam == TEAM_NUM) {
+			corner = p.redCorner;		
+			UR_x = p.Red_UR_x;		
+			LL_x = p.Red_LL_x;		
+			UR_y = p.Red_UR_y;		
+			LL_y = p.Red_LL_y;		
+			Tunnel_UR_x = p.TNR_UR_x;
+			Tunnel_LL_x = p.TNR_LL_x;
+			Tunnel_UR_y = p.TNR_UR_y;
+			Tunnel_LL_y = p.TNR_LL_y;
+			Tree_x = p.TR_x;
+			Tree_y = p.TR_y;
+			
+		}
+		else {
+			corner = p.greenCorner;		
+			UR_x = p.Green_UR_x;		
+			LL_x = p.Green_LL_x;		
+			UR_y = p.Green_UR_y;		
+			LL_y = p.Green_LL_y;	
+			Tunnel_UR_x = p.TNG_UR_x;
+			Tunnel_LL_x = p.TNG_LL_x;
+			Tunnel_UR_y = p.TNG_UR_y;
+			Tunnel_LL_y = p.TNG_LL_y;
+			Tree_x = p.TG_x;
+			Tree_y = p.TG_y;
+		}
+		
+		Island_UR_x = p.Island_UR_x;	
+		Island_LL_x = p.Island_LL_x;
+		Island_UR_y = p.Island_UR_y;
+		Island_LL_y = p.Island_LL_y;
 		
 		(new Thread() {
 			public void run() {
@@ -168,18 +155,26 @@ public class Project {
 				Sound.beep();
 				Sound.beep();
 				
-				
+				//Step 3: Move through tunnel
 				navigation.moveThroughTunnel(Tunnel_LL_x, Tunnel_LL_y, Tunnel_UR_x, Tunnel_UR_y, Island_LL_x, Island_LL_y, Island_UR_x, Island_UR_y);
 
-				navigation.travelToTree(Tree_x, Tree_y, Island_LL_x, Island_LL_y, Island_UR_x, Island_UR_y);
+				//Step 4: Go To Tree
+				navigation.travelToTree(Tree_x, Tree_y);
 			
+				//Step 5: Grab a ring and detect colour
 				GetRing g = new GetRing(colourSensorValues, colourSensorData, navigation);
-				g.grabRing();
+				g.getRing(Tree_x, Tree_y);
 				
-				//Return to start
+				//Step 6: Return through tunnel
 				navigation.moveThroughTunnel(Tunnel_LL_x, Tunnel_LL_y, Tunnel_UR_x, Tunnel_UR_y, LL_x, LL_y, UR_x, UR_y);
 
+				//Step 7: Return to start
 				navigation.moveToStartingCorner(corner);
+				Sound.beep();
+				Sound.beep();
+				Sound.beep();
+				Sound.beep();
+				Sound.beep();
 
 			}
 		}).start();

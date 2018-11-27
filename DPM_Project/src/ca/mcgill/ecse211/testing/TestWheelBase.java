@@ -1,7 +1,6 @@
 
 package ca.mcgill.ecse211.testing;
 
-import ca.mcgill.ecse211.odometer.OdometerExceptions;
 import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;

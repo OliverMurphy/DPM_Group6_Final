@@ -26,7 +26,14 @@ import ca.mcgill.ecse211.WiFiClient.WifiConnection;
  * the EV3Control program via Bluetooth or WiFi. You can disable printing from the WiFi code via
  * ENABLE_DEBUG_WIFI_PRINT (below).
  * 
+ * 
+ * This class was taken from the one given on mycourses. The changes made are the main method was converted to a 
+ * public method that could be called from elsewhere. Also, it now gathers all the parameters available and sets
+ * them to variables which can be accessed.
+ * 
  * @author Michael Smith, Tharsan Ponnampalam
+ * 
+ * @author Lucy
  *
  */
 public class WiFiParameters {

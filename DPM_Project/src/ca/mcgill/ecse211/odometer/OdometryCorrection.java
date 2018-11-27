@@ -4,7 +4,9 @@ import ca.mcgill.ecse211.project.LightLocalizer;
 import ca.mcgill.ecse211.project.Navigation;
 
 /**
- * This class corrects the odometer value
+ * This class corrects the odometer value. It implements both coordinate and angle correction by using two light
+ * sensors. It works when the robot is always moving parallel to the x or y axis.
+ * 
  * @author Lucy Coyle
  * @author Oliver Murphy
  */

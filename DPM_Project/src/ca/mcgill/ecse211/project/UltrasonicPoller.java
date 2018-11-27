@@ -5,13 +5,13 @@ import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.hardware.sensor.SensorModes;
 
 /**
- * This class implements a poller on the ultrasonic sensor
+ * This class implements a poller on the ultrasonic sensor. It collects the distance sensed by the sensor.
  * @author Lucy Coyle
  */
 
 import lejos.robotics.SampleProvider;
 
-public class UltrasonicPoller extends Thread {
+public class UltrasonicPoller {
 
 	private int distance;
 	private Port usPort;
@@ -31,20 +31,6 @@ public class UltrasonicPoller extends Thread {
 	usDistance = usSensor.getMode("Distance"); 
 	usData = new float[usDistance.sampleSize()];
     
-  }
-  
-  /**
-   * This method is where the logic for the ultrasonic poller will run. 
-   */
-  public void run() {
-    while (true) {
-      usSensor.fetchSample(usData, 0); // acquire data
-      this.distance = (int) (usData[0] * 100.0); // extract from buffer, cast to int
-      try {
-        Thread.sleep(50);
-      } catch (Exception e) {
-      } 
-    }
   }
   
   /**

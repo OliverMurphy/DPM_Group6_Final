@@ -101,7 +101,7 @@ public class TestSensor {
 		lcd.clear();
 		
 		while(true){
-			int c = getRing.colourClassify();
+			int c = getRing.senseRing();
 			if(c != -1) {
 				lcd.drawString("Object Detected", 0, 0);
 				switch (c){
@@ -160,7 +160,7 @@ public class TestSensor {
 	 */
 	public static void ultrasonicSensorTest() {
 		ultrasonicPoller = new UltrasonicPoller(usPort);
-		ultrasonicPoller.start();
+
 		(new Thread() {
 			public void run() {
 				try {

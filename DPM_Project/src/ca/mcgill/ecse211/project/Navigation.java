@@ -5,7 +5,9 @@ import ca.mcgill.ecse211.odometer.OdometryCorrection;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
 /**
- * This class implements navigation for the robot
+ * This class implements navigation for the robot. It keeps all navigation in one location, so that it is easier to 
+ * ensure the consistency of the robots speed, correction, wheel base, and track.
+ * 
  * @author Lucy Coyle 
  * @author Oliver Murphy
  */
@@ -17,15 +19,15 @@ public class Navigation {
 	private EV3LargeRegulatedMotor rightMotor;
 	private final double TRACK;
 	private final double WHEEL_RAD;
-	public final int FORWARD_SPEED = 200;
-	public final int CORRECTION_SPEED = 100;
-	public final int ROTATE_SPEED = 100;
-	public final int CIRCLE_SPEED = 90;
-	public static int width = 8;
-	public static int length = 8;
+	private final int FORWARD_SPEED = 200;
+	private final int CORRECTION_SPEED = 100;
+	private final int ROTATE_SPEED = 100;
+	private final int CIRCLE_SPEED = 90;
+	private static int width = 8;
+	private static int length = 8;
 	public final double TILE_SIZE  = 30.48;
-	public final int acceleration = 100;
-	public final int defAcceleration = 6000;
+	private final int acceleration = 100;
+	private final int defAcceleration = 6000;
 
 	private OdometryCorrection odoCorrection;
 	
@@ -82,8 +84,7 @@ public class Navigation {
 		
 		position = this.odometer.getXYT(); //get current position
 		
-		double delta_theta = theta - position[2]; //calculate change in theta based on current angle
-		turn(delta_theta); //Turn to delta_theta
+		turnTo(theta);
 		if(correct) {
 			odoCorrection.angleCorrection();//correct angle -> tunnel travel wont work
 		}
@@ -117,11 +118,9 @@ public class Navigation {
 		
 		position = this.odometer.getXYT(); //get current position
 		
-		double delta_theta = theta - position[2]; //calculate change in theta based on current angle
-		
-		turn(delta_theta); //Turn to delta_theta
+		turnTo(theta);
 		if(correct) {
-			odoCorrection.angleCorrection(); //correct angle -> tunnel travel wont work
+			odoCorrection.angleCorrection(); //correct angle
 		}
 		
 		sleep(500);
@@ -134,17 +133,6 @@ public class Navigation {
 
 	    stopRobot();
 	}
-	
-	
-	/**
-	 * This method moves the robot to a point while avoiding obstacles
-	 * @param x, y coordinates of point to travel to
-	 */
-	
-	public void travelToAvoid(int x, int y) {
-		
-	}
-	
 	
 	/**
 	 * This method turns the robot by an angle
@@ -266,7 +254,7 @@ public class Navigation {
 	}
 	
 	/**
-	 * This method starts moving the left motor continuously
+	 * This method starts moving the right motor continuously
 	 */
 	public void moveRightForward()
 	{
@@ -368,8 +356,8 @@ public class Navigation {
 	 * This method initializes XYT in the odometer based on the corner the robot is localized at
 	 * @param c
 	 */
-	public void initializeXYT(int c) {
-		switch(c){
+	public void initializeXYT(int corner) {
+		switch(corner){
 		case 0:
 			odometer.setXYT(TILE_SIZE, TILE_SIZE, 0);
 			break;
@@ -386,8 +374,13 @@ public class Navigation {
 		sleep(500);
 	}
 	
-	public void moveToStartingCorner(int c) {
-		switch(c){
+	/**
+	 * This method moves the robot to it's original starting corner
+	 * @param corner
+	 */
+	
+	public void moveToStartingCorner(int corner) {
+		switch(corner){
 		case 0:
 			travelTo(1, 1, true);
 			break;
@@ -413,7 +406,7 @@ public class Navigation {
 	 * @param iURX
 	 * @param iURY
 	 */
-	public void travelToTree(int x, int y, int iLLX, int iLLY, int iURX, int iURY) {
+	public void travelToTree(int x, int y) {
 		double[] position = odometer.getXYT();
 
 		if(x * TILE_SIZE > position[1] && x + 1 != width){
@@ -439,22 +432,31 @@ public class Navigation {
 	 * This method moves the robot to a new side of the tree
 	 * @param x
 	 * @param y
+	 * @return success
 	 */
-	public void moveSideOfTree(int x, int y) {
+	public boolean moveSideOfTree(int x, int y) {
 		double[] position = odometer.getXYT();
 		
-		if(y * TILE_SIZE > position[1]) {
-			travelTo(x + 0.5, y, true);
+		if(y * TILE_SIZE > position[1] && x + 1 != width){
+			_travelToY(y - 0.25, true);
+			_travelToX(x + 1, false);
 		}
-		else if(x * TILE_SIZE < position[0]) {
-			travelTo(x, y + 0.5, true);
+		else if(x * TILE_SIZE < position[0] && y + 1 != length){
+			_travelToX(x - 0.25, true);
+			_travelToY(y - 1, false);
 		}
-		else if(y * TILE_SIZE < position[1]) {
-			travelTo(x - 0.5, y, true);
+		else if(y * TILE_SIZE < position[1] && x - 1 != 0){
+			_travelToY(y - 0.25, true);
+			_travelToX(x - 1, false);
+		}
+		else if(y + 1 != length){
+			_travelToX(x - 0.25, true);
+			_travelToY(y - 1, false);
 		}
 		else {
-			travelTo(x, y - 0.5, true);
+			return false;
 		}
+		return true;
 	}
 	
 	/**

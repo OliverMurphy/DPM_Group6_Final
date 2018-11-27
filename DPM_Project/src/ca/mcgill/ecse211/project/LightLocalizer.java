@@ -1,9 +1,11 @@
 package ca.mcgill.ecse211.project;
 
-import java.util.concurrent.TimeUnit;
-
 /**
- * This class localizes the robot by light detection
+ * This class localizes the robot by light detection. It uses two light pollers, one on the left of the robot
+ * and one on the right of the robot. The robot is localized, by turning and straightening itself on a line in a full
+ * circle. The straighten on a line method is also used by the odometry correction that occurs after localization and 
+ * through out the demo as well.
+ * 
  * @author Lucy Coyle
  * @author Oliver Murphy
  */
@@ -16,12 +18,12 @@ public class LightLocalizer {
 	private Navigation navigation;
 	
 	/**
-	   * This is the default constructor of this class. It initilaizes the odometer, lightpoller, and navigation
-	   * 
-	   * @param odometer
-	   * @param usPoller
-	   * @param navigation
-	   */
+	 * This is the default constructor for the class it takes in the light pollers and the navigation object
+	 * @param lpLeft
+	 * @param lpRight
+	 * @param navigation
+	 */
+	
 	public LightLocalizer(LightPoller lpLeft, LightPoller lpRight, Navigation navigation)  {
 		this.lpLeft = lpLeft;
 		this.navigation = navigation;
@@ -70,7 +72,7 @@ public class LightLocalizer {
 			  }
 			
 			try {
-				TimeUnit.MILLISECONDS.sleep(10);
+				Thread.sleep(10);
 			} catch (InterruptedException e1) {}
 		}
 		
@@ -86,7 +88,7 @@ public class LightLocalizer {
 		
 		straightenOnLine();
 		  
-		navigation.turn(-90); //should it be turn?
+		navigation.turn(-90); 
 		  
 		navigation.travelBackward(5);
 		  

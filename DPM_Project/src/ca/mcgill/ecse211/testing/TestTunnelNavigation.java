@@ -1,7 +1,6 @@
 package ca.mcgill.ecse211.testing;
 
 import ca.mcgill.ecse211.odometer.Odometer;
-import ca.mcgill.ecse211.odometer.OdometerDisplay;
 import ca.mcgill.ecse211.odometer.OdometerExceptions;
 import ca.mcgill.ecse211.odometer.OdometryCorrection;
 import ca.mcgill.ecse211.project.LightLocalizer;

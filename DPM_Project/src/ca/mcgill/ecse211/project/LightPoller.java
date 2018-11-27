@@ -5,7 +5,9 @@ import lejos.hardware.port.Port;
 import lejos.hardware.sensor.EV3ColorSensor;
 
 /**
- * This class implements a poller on the light sensor
+ * This class implements a poller on the light sensor. It detects lines that the light poller senses by comparing the
+ * difference of different light readings. It is set up to detect lines which are darker than the background surface.
+ * 
  * @author Lucy Coyle
  */
 
@@ -21,12 +23,12 @@ public class LightPoller extends Thread {
 	private float lightThreshold = 20;
 
   /**
-   * This is the default constructor of this class. It initiates the light sensor
+   * This is the default constructor of this class. It initiates the light sensor based on a port
    * 
    * @param lPort
    */
-  public LightPoller(Port lPortLeft) {
-	   lightPort = lPortLeft;
+  public LightPoller(Port lPort) {
+	   lightPort = lPort;
 	   lightSensor = new EV3ColorSensor(lightPort);
 	   lightSensorValues = lightSensor.getRedMode();
        lsData = new float[lightSensor.sampleSize()];
