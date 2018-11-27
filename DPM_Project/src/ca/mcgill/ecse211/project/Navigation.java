@@ -2,7 +2,6 @@ package ca.mcgill.ecse211.project;
 
 import ca.mcgill.ecse211.odometer.Odometer;
 import ca.mcgill.ecse211.odometer.OdometryCorrection;
-import lejos.hardware.Sound;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
 /**
@@ -75,15 +74,15 @@ public class Navigation {
 		double[] position = this.odometer.getXYT(); //get current position
 		x =  x * TILE_SIZE;
 		double delta_x = x - position[0]; //calculate change in x needed
-		double theta = 270; //calculate angle required
+		double theta = 90; //calculate angle required
 		
 		if (delta_x < 0) {		//If going to the negative x, change the theta
-			theta = 90;
+			theta = 270;
 		}
 		
 		position = this.odometer.getXYT(); //get current position
 		
-		double delta_theta = position[2] - theta; //calculate change in theta based on current angle
+		double delta_theta = theta - position[2]; //calculate change in theta based on current angle
 		turn(delta_theta); //Turn to delta_theta
 		if(correct) {
 			odoCorrection.angleCorrection();//correct angle -> tunnel travel wont work
@@ -111,12 +110,9 @@ public class Navigation {
 		double theta;
 		if(delta_y < 0) {
 			theta = 180; //calculate angle required
-			Sound.beep();
-			Sound.beep();
 		}
 		else {
 			theta = 0;
-			Sound.beep();
 		}
 		
 		position = this.odometer.getXYT(); //get current position
@@ -309,39 +305,46 @@ public class Navigation {
 	 */
 	public void moveThroughTunnel(int LLX, int LLY, int URX, int URY, int iLLX, int iLLY, int iURX, int iURY) {
 		//Horizontal Backwards
-		if(inIsland(LLX + 0.5, LLY - 0.5, iLLX, iLLY, iURX, iURY)) {
+		if(inIsland(LLX - 0.5, LLY + 0.5, iLLX, iLLY, iURX, iURY)) {
 			travelTo(URX - 1, URY + 0.5, true);
 			turnTo(270);
-			travelForward((URX-LLX + 1.5)* TILE_SIZE);
-			odometer.setX((LLX + 0.5)* TILE_SIZE);
-			odometer.setTheta(180);
+			odoCorrection.angleCorrection();
+			travelForward((URX-LLX + 2)* TILE_SIZE);
+			odoCorrection.angleCorrection();
+			odometer.setX((LLX + 1)* TILE_SIZE);
+			odometer.setTheta(270);
 		}
 		//Vertical Upwards
 		else if(inIsland(URX - 0.5, URY + 0.5, iLLX, iLLY, iURX, iURY)) {
 			travelTo(LLX + 0.6, LLY - 1, true);
+			odoCorrection.angleCorrection();
 			travelForward((URY - LLY + 2) * TILE_SIZE);
-			odoCorrection.coordinateCorrection();
+			odoCorrection.angleCorrection();
 			odometer.setY((URY + 1)* TILE_SIZE);
-			odometer.setTheta(90);
+			odometer.setTheta(0);
 			
 		}
 		//Horizontal Forwards
 		else if(inIsland(URX + 0.5, URY - 0.5, iLLX, iLLY, iURX, iURY)) {
 			travelTo(LLX - 1, LLY + 0.5, true);
 			turnTo(90);
-			travelForward((URX-LLX + 1.5)* TILE_SIZE);
-			odometer.setX((URX + 0.5)* TILE_SIZE);
-			odometer.setTheta(0);
+			odoCorrection.angleCorrection();
+			travelForward((URX-LLX + 2)* TILE_SIZE);
+			odoCorrection.angleCorrection();
+			odometer.setX((URX + 1)* TILE_SIZE);
+			odometer.setTheta(90);
 			
 		}
 		//Vertical Downwards
-		else if(inIsland(LLX - 0.5, LLY + 0.5, iLLX, iLLY, iURX, iURY)) {
-			travelTo(URX + 0.5, URY + 1, true);
-			travelForward((URY-LLY + 1.5)* TILE_SIZE);
-			odometer.setY((LLY + 0.5)* TILE_SIZE);
-			odometer.setTheta(90);
+		else if(inIsland(LLX + 0.5, LLY - 0.5, iLLX, iLLY, iURX, iURY)) {
+			travelTo(URX - 0.5, URY + 1, true);
+			odoCorrection.angleCorrection();
+			travelForward((URY-LLY + 2)* TILE_SIZE);
+			odoCorrection.angleCorrection();
+			odometer.setY((LLY + 1)* TILE_SIZE);
+			odometer.setTheta(180);
 		}
-		sleep(100);
+		sleep(600);
 	}
 	
 	/**
@@ -383,6 +386,24 @@ public class Navigation {
 		sleep(500);
 	}
 	
+	public void moveToStartingCorner(int c) {
+		switch(c){
+		case 0:
+			travelTo(1, 1, true);
+			break;
+		case 1:
+			travelTo((width - 1), 1, true);
+			break;
+		case 2:
+			travelTo((width - 1), (length - 1), true);
+			break;
+		case 3:
+			travelTo(1, (length - 1), true);
+			break;
+		}
+		sleep(500);
+	}
+	
 	/**
 	 * This method moves the robot to the tree
 	 * @param x
@@ -394,43 +415,22 @@ public class Navigation {
 	 */
 	public void travelToTree(int x, int y, int iLLX, int iLLY, int iURX, int iURY) {
 		double[] position = odometer.getXYT();
-		boolean left = true;
-		boolean right = true;
-		boolean up = true;
-		boolean down = true;
-		
-		
-		//Check edge cases
-//		if(x + 1 == 8 || x + 1 == iURX) {
-		if(x + 1 == 8) {
-			right = false;
-		}
-//		if(x - 1 == 0 || x - 1 == iLLX) {
-		if(x - 1 == 0) {
-			left = false;
-		}
-//		if(y + 1 == 8 || y + 1 == iURY) {
-		if(y + 1 == 8) {
-			down = false;
-		}
-//		if(y - 1 == 0 || y - 1 == iLLY) {
-		if(y - 1 == 0) {
-			up = false;
-		}
-		
-		if(x * TILE_SIZE > position[1] && right){
-			_travelToY(y, false);
+
+		if(x * TILE_SIZE > position[1] && x + 1 != width){
+			_travelToY(y - 0.25, true);
 			_travelToX(x + 1, false);
 		}
-		else if(x * TILE_SIZE < position[1] && left){
-			_travelToY(y, false);
+		else if(x * TILE_SIZE < position[1] && x - 1 != 0){
+			_travelToY(y - 0.25, true);
 			_travelToX(x - 1, false);
 		}
-		else if(y * TILE_SIZE > position[1] && up) {
-			travelTo(x, y + 1, true);
+		else if(y * TILE_SIZE > position[1] && y - 1 != 0) {
+			_travelToX(x - 0.25, true);
+			_travelToY(y + 1, false);
 		}
-		else if(y * TILE_SIZE < position[1] && down){
-			travelTo(x, y - 1, true);
+		else if(y * TILE_SIZE < position[1] && y + 1 != length){
+			_travelToX(x - 0.25, true);
+			_travelToY(y - 1, false);
 		}
 		
 	}

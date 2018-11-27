@@ -9,6 +9,8 @@ import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.Port;
+import lejos.hardware.sensor.EV3ColorSensor;
+import lejos.robotics.SampleProvider;
 
 /**
  * This class implements the main control for the project
@@ -27,13 +29,17 @@ public class Project {
 	public static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
 
 	private static final Port usPort = LocalEV3.get().getPort("S2");
-	public static Port lightPortRight = LocalEV3.get().getPort("S1");//right one when robot is facing away from you
-	public static Port colourPort = LocalEV3.get().getPort("S4");//high light sensor for rings
-	public static Port lightPortLeft = LocalEV3.get().getPort("S3");//left one when robot is facing away from you
+	public static Port lightPortRight = LocalEV3.get().getPort("S1");
+	public static Port colourPort = LocalEV3.get().getPort("S4");
+	public static Port lightPortLeft = LocalEV3.get().getPort("S3");
 	
 	public static LightPoller lightPollerRight  = new LightPoller(lightPortRight);
 	public static UltrasonicPoller usPoller = new UltrasonicPoller(usPort);
 	public static LightPoller lightPollerLeft = new LightPoller(lightPortLeft);
+	
+	public static EV3ColorSensor colourSensor = new EV3ColorSensor(colourPort);
+	public static SampleProvider colourSensorValues = colourSensor.getRGBMode();
+	static float[] colourSensorData = new float[3];
 
 	public static final TextLCD lcd = LocalEV3.get().getTextLCD();
 	
@@ -131,7 +137,7 @@ public class Project {
 		teamColour = "green";
 		corner = 0;		
 		UR_x = 8;		
-		LL_x = 2;		
+		LL_x = 0;		
 		UR_y = 3;		
 		LL_y = 0;		
 		Island_UR_x = 6;	
@@ -143,64 +149,43 @@ public class Project {
 		Tunnel_UR_y = 5;
 		Tunnel_LL_y = 3;
 		Tree_x = 5;
-		Tree_y = 6;
+		Tree_y = 7;
 		
 		Button.waitForAnyPress();
 		
 		(new Thread() {
 			public void run() {
-//				OdometerDisplay odometryDisplay = null;
-// 				try {
-// 					odometryDisplay = new OdometerDisplay(lcd);
-// 				} catch (OdometerExceptions e1) {}
- 				
+
  				Thread odoThread = new Thread(odometer);
  				odoThread.start();
-// 				Thread odoDisplayThread = new Thread(odometryDisplay);
-// 				odoDisplayThread.start();
-
 
 				//Step 2: Localize	
 				usLocalizer.localize();
 				lightLocalizer.localize();
 				
-				//Set x, y, theta based on corner
 				navigation.initializeXYT(corner);
 				Sound.beep();
 				Sound.beep();
 				Sound.beep();
 				
+				
 				navigation.moveThroughTunnel(Tunnel_LL_x, Tunnel_LL_y, Tunnel_UR_x, Tunnel_UR_y, Island_LL_x, Island_LL_y, Island_UR_x, Island_UR_y);
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				lcd.clear();
-				double [] position = odometer.getXYT();
-				lcd.drawString("X : " + position[0], 0, 0);
-				lcd.drawString("Y : " + position[1], 0, 1);
-				lcd.drawString("T : " + position[2], 0, 2);
+
 				navigation.travelToTree(Tree_x, Tree_y, Island_LL_x, Island_LL_y, Island_UR_x, Island_UR_y);
-//				navigation.travelTo(6, 6, false);
+			
+				GetRing g = new GetRing(colourSensorValues, colourSensorData, navigation);
+				g.grabRing();
+				
+				//Return to start
+				navigation.moveThroughTunnel(Tunnel_LL_x, Tunnel_LL_y, Tunnel_UR_x, Tunnel_UR_y, LL_x, LL_y, UR_x, UR_y);
+
+				navigation.moveToStartingCorner(corner);
 
 			}
 		}).start();
 		
 		Button.waitForAnyPress(); 
 		System.exit(0);
-		
-		//Localize
-		
-		//Navigate to tunnel and through tunnel
-		
-		//Navigate to tree
-		
-		//Grabs rings
-		
-		//Navigate to tunnel and through tunnel
-		
-		//Navigate back to beginning
 		
 	}
 	

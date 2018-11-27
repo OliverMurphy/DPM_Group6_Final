@@ -85,9 +85,9 @@ public class GetRing {
 	public void grabRing() {
 		armMotor.setSpeed(90);
 		armMotor.rotate(-50);
-		navigation.travelForward(9);
+		navigation.travelForward(13);
 		armMotor.rotate(75);
-		navigation.travelBackward(9);
+		navigation.travelBackward(13);
 		liftMotor.setSpeed(90);
 		liftMotor.rotate(-90);
 	}
@@ -109,7 +109,6 @@ public class GetRing {
 	 */
 	
 	public void getOneRing(int x, int y) {
-//		navigation.travelToTree(x, y);
 		grabRing();
 		int c = senseRing();
 		switch(c) {
