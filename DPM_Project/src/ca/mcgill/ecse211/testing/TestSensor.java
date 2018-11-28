@@ -27,16 +27,16 @@ import lejos.robotics.SampleProvider;
 public class TestSensor {
 	
 	//Set up us sensor
-	private static final Port usPort = LocalEV3.get().getPort("S1");
-	public static SensorModes usSensor = new EV3UltrasonicSensor(usPort); 
-	public static SampleProvider usDistance = usSensor.getMode("Distance"); 
-	public static float[] usData = new float[usDistance.sampleSize()];
+	private static final Port usPort = LocalEV3.get().getPort("S2");
+//	public static SensorModes usSensor = new EV3UltrasonicSensor(usPort); 
+//	public static SampleProvider usDistance = usSensor.getMode("Distance"); 
+//	public static float[] usData = new float[usDistance.sampleSize()];
 	
 	//Set up light sensor
-	public static Port lightPort = LocalEV3.get().getPort("S2");
-	public static EV3ColorSensor lightSensor = new EV3ColorSensor(lightPort);
-	public static SampleProvider lightSensorValues = lightSensor.getRedMode();
-	static float[] lightSensorData = new float[lightSensor.sampleSize()];
+	public static Port lightPort = LocalEV3.get().getPort("S1");
+//	public static EV3ColorSensor lightSensor = new EV3ColorSensor(lightPort);
+//	public static SampleProvider lightSensorValues = lightSensor.getRedMode();
+//	static float[] lightSensorData = new float[lightSensor.sampleSize()];
 
 	//Set up screen display
 	public static final TextLCD lcd = LocalEV3.get().getTextLCD();
@@ -95,13 +95,14 @@ public class TestSensor {
 	 */
 	
 	public static void lightSensorColourTest() {
-		lightSensorValues = lightSensor.getRGBMode();
-		lightSensorData = new float[3];
-		GetRing getRing = new GetRing(lightSensorValues, lightSensorData);
+//		lightSensorValues = lightSensor.getRGBMode();
+//		lightSensorData = new float[3];
+//		GetRing getRing = new GetRing(lightSensorValues, lightSensorData);
 		lcd.clear();
 		
 		while(true){
-			int c = getRing.senseRing();
+			int c = 1;
+//			int c = getRing.senseRing();
 			if(c != -1) {
 				lcd.drawString("Object Detected", 0, 0);
 				switch (c){

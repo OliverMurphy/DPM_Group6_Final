@@ -96,7 +96,7 @@ public class GetRing {
 		int c = -1;
 		int side = 0;
 		
-		while(side < 4 && c < 1) {
+		while(side < 1 && c < 1) {
 			grabRing();
 			
 			//Detect colour of the ring and beep accordingly

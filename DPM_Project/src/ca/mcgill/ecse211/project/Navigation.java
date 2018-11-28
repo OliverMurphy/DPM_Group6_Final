@@ -23,8 +23,8 @@ public class Navigation {
 	private final int CORRECTION_SPEED = 100;
 	private final int ROTATE_SPEED = 100;
 	private final int CIRCLE_SPEED = 90;
-	private static int width = 8;
-	private static int length = 8;
+	private static int width = 15;
+	private static int length = 9;
 	public final double TILE_SIZE  = 30.48;
 	private final int acceleration = 100;
 	private final int defAcceleration = 6000;

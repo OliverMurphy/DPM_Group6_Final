@@ -39,7 +39,7 @@ import ca.mcgill.ecse211.WiFiClient.WifiConnection;
 public class WiFiParameters {
 
   // ** Set these as appropriate for your team and current situation **
-  private static final String SERVER_IP = "192.168.2.39";//192.168.2.2
+  private static final String SERVER_IP = "192.168.2.2";//192.168.2.2
   private static final int TEAM_NUMBER = 6;
   
   public int greenTeam;
