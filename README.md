@@ -1,2 +1,2 @@
 # DPM_Group6_Final
-Semester long project done in teams of 6 people. We each had a role. I was the software engineer. We used the leJOS environment to build a robot which could avoid obstacles, identify colours, pick rings up, navigate through tunnels, follow walls, etc. This is the final submission of the code. 
+Semester long project done in teams of 6 people. We each had a role. I was the software engineer. We used the leJOS environment to build a robot which could avoid obstacles, identify colours, pick rings up, navigate through tunnels, follow walls,localize itself on a grid, etc. The goal of the project was to localize the robot, reach a tree, pick up and bring back as many rings possible to the initial location. 
